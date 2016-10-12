@@ -284,6 +284,10 @@ class Requests{
 }
 class Responds{
   //x' x a' a m a'
+  @:noUsing static public function deferred<A,B,X,Y>(v:Future<Y>):Proxy<A,B,X,Y,X>{
+    return Later(v.map(pure));
+  }
+  //x' x a' a m a'
   @:noUsing static public function pure<A,B,X,Y>(v:Y):Proxy<A,B,X,Y,X>{
     return Yield(v,Ended);
   }

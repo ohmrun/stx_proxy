@@ -2,6 +2,7 @@
 -cp src/test/haxe
 -lib tink_core
 -lib arrowlets
+-lib thx.core
 -main Test
 -neko test.n
 -cmd neko test.n

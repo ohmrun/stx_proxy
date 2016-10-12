@@ -1,3 +1,4 @@
-wpackage stx.proxy.data;
+package stx.proxy.data;
+import tink.CoreApi;
 
-typedef Pipe<B,Y,R>   = Proxy<Noise,B,Noise,Y,R>;
+typedef Pipe<B,Y,R>   = stx.Proxy<Noise,B,Noise,Y,R>;
