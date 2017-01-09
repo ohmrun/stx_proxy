@@ -1,6 +1,8 @@
 -cp src/main/haxe
 -cp src/test/haxe
 -lib tink_core
+-lib stx_tuple
+-lib stx_maybe
 -lib arrowlets
 -lib thx.core
 -main Test

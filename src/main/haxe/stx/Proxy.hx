@@ -47,6 +47,15 @@ class Proxies{
       case Later(ft)    : Later(ft.map(function(pr) return flatMap(pr,fn)));
     }
   }
+  static public function map<A,B,X,Y,R,O>(prx:Proxy<A,B,X,Y,R>,fn:R->O):Proxy<A,B,X,Y,O>{
+    return switch (prx) {
+      case Ended(res)   : Ended(fn(res));
+      case Await(a,arw) : Await(a,arw.then(map.bind(_,fn)));
+      case Yield(y,arw) : Yield(y,arw.then(map.bind(_,fn)));
+      case Later(ft)    : Later(ft.map(map.bind(_,fn)));
+    }
+
+  }
   static public function reflect<A,B,X,Y,R>(prx:Proxy<A,B,X,Y,R>):Proxy<Y,X,B,A,R>{
     return switch(prx) {
       case Await(a,arw) : Yield(a,arw.then(reflect));
@@ -65,7 +74,7 @@ class Proxies{
           }
           return function(){};
         }
-      );
+      )(p0,cont);
       return function(){}
     }
   }
