@@ -1,5 +1,9 @@
 -cp src/main/haxe
 -cp src/test/haxe
+-lib pointwise
+-lib stx_chunk
+-lib stx_error
+-lib stx_vouch
 -lib tink_core
 -lib stx_tuple
 -lib stx_maybe
