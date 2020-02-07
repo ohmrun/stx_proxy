@@ -3,11 +3,11 @@ package stx.proxy.core.body;
 class Responds{
   //x' x a' a m a'
   @:noUsing static public function deferred<A,B,X,Y,E>(v:Future<Y>):Proxy<A,B,X,Y,X,E>{
-    return Later((wrk) -> v.map(pure));
+    return Later(Receivers.fromFuture(v.map(v->pure(v))));
   }
   //x' x a' a m a'
   @:noUsing static public function pure<A,B,X,Y,E>(v:Y):Proxy<A,B,X,Y,X,E>{
-    return Yield(v,Val.fn().then(Ended));
+    return Yield(v,__.arw().fn()(Val.fn().then(Ended)));
   }
   /*{-| Compose two unfolds, creating a new unfold
 
@@ -24,7 +24,7 @@ class Responds{
   {-# INLINABLE (/>/) #-}*/
   static public function responding<A,B,X,Y,M,N,P,Q,R,E>(fn:Arrowlet<Q,Proxy<A,B,X,Y,P,E>>,fn0:Arrowlet<Y,Proxy<A,B,M,N,X,E>>):Arrowlet<Q,Proxy<A,B,M,N,P,E>>{
     return function(x:Q){
-      return Responds.responder(Later(fn.apply(x)),fn0);
+      return Responds.responder(Later(fn.receive(x)),fn0);
     }
   }
   /*{-| @(p \/\/> f)@ replaces each 'respond' in @p@ with @f@.
@@ -49,7 +49,7 @@ class Responds{
           return switch (p1) {
             case Ended(res)   : Ended(res);
             case Await(a,arw) : Await(a,arw.then(go));
-            case Yield(y,arw) : Proxies.flatMap(Later(fn.apply(y)),arw.then(go));
+            case Yield(y,arw) : Proxies.fmap(Later(fn.receive(y)),arw.then(go));
             case Later(ft)    : Later(ft.map(responder.bind(_,fn)));
           }
         }

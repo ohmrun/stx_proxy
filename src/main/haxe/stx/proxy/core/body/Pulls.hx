@@ -4,8 +4,22 @@ class Pulls{
   @:noUsing static public function pure<A,B,X,Y,R,E>(a:A):Proxy<A,B,A,B,R,E>{
     return Await(a,
       function(b:B){
-        return Yield(b,pure);
+        return Yield(b,pure);  
       }
+    );
+  }
+  @:noUsing static public function gen<A,B,R,E>(thk:Thunk<Option<A>>):Proxy<A,B,A,B,R,E>{
+    var fn = Options._.fold.bind(
+      (v) -> Await(v,__.arw().fn()((_) -> gen(thk))),
+      ()  -> Ended(Tap)
+    );
+    return Later(
+      Receiver.lift(
+        (next) -> {
+          next(thk());
+          return Automation.unit();
+        } 
+      ).map(fn)
     );
   }
   @:noUsing static public function signal<A,B,X,Y,R,E>(a:A):Proxy<A,B,A,B,R,E>{
@@ -17,14 +31,10 @@ class Pulls{
   }
   @:noUsing static public function fromSignal<A,B,X,Y,R,E>(sig:Signal<A>):Proxy<A,B,A,B,R,E>{
     return Later(
-      (wrk) -> sig.nextTime().map(
-        function(v:A){
-          return Await(v,
-            function(b:B,cont:Strand<Proxy<A,B,A,B,R,E>>){
-              return cont.apply(fromSignal(sig));
-            }
-          );
-        }
+      Receivers.fromFuture(sig.nextTime()).map(
+        (v:A) -> Await(v,__.arw().cont()((b:B,cont:Continue<Proxy<A,B,A,B,R,E>>) ->
+          cont(fromSignal(sig),Automation.unit())
+        ))
       )
     );
   }
@@ -36,9 +46,9 @@ class Pulls{
       var fst   = next.shift();
       var rst   = next;
       return Await(fst,
-        function(b:B,cont:Strand<Proxy<A,B,A,B,R,E>>){
-          return cont.apply(fromArray(rst));
-        }
+        __.arw().cont()(function(b:B,cont:Continue<Proxy<A,B,A,B,R,E>>){
+          return cont(fromArray(rst),Automation.unit());
+        })
       );
     }
   }
@@ -53,9 +63,9 @@ class Pulls{
   */
   //(>->)
   static public function pulling<A,B,C,D,X,Y,R,E>(prx0:Arrowlet<X,Proxy<A,B,X,Y,R,E>>,prx1:Arrowlet<C,Proxy<X,Y,C,D,R,E>>):Arrowlet<C,Proxy<A,B,C,D,R,E>>{
-    return function(c:C,cont){
-      return prx1.then(puller.bind(prx0)).withInput(c,cont);
-    }
+    return __.arw().cont()((c:C,cont) -> 
+      prx1.then(puller.bind(prx0)).prepare(c,cont)
+    );
   }
   /**
     (->>)
@@ -73,8 +83,8 @@ class Pulls{
   //(->>)
   static public function puller<A,B,C,D,X,Y,R,E>(prx0:Arrowlet<X,Proxy<A,B,X,Y,R,E>>,prx1:Proxy<X,Y,C,D,R,E>):Proxy<A,B,C,D,R,E>{
     return switch (prx1){
-      case Await(a,arw) : Pushes.pusher(Later(prx0.apply(a)),arw);
-      case Yield(y,arw) : Yield(y,function(c:C){ return Pulls.puller(prx0,Later(arw.apply(c)));});
+      case Await(a,arw) : Pushes.pusher(Later(prx0.receive(a)),arw);
+      case Yield(y,arw) : Yield(y,function(c:C){ return Pulls.puller(prx0,Later(arw.receive(c)));});
       case Ended(res)   : Ended(res);
       case Later(ft)    : Later(ft.map(puller.bind(prx0)));
     }

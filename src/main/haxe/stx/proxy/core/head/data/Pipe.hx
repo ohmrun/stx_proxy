@@ -1,3 +1,5 @@
 package stx.proxy.core.head.data;
 
-typedef Pipe<B,Y,R,E>   = Proxy<Noise,B,Noise,Y,R,E>;
+import stx.proxy.core.head.data.Proxy in ProxyT;
+
+typedef Pipe<B,Y,R,E>   = ProxyT<Noise,B,Noise,Y,R,E>;

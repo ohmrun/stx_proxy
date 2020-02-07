@@ -4,11 +4,15 @@
 -lib tink_core
 -lib utest
 
--lib stx
--lib arrowlets
--lib stx_zio
+-lib stx_arrowlet
+-lib stx_core
+-lib stx_fn
+-lib stx_ds
+-lib stx_run
 
 -cp src/main/haxe
--cp src/test/haxe
 
 -D test
+
+
+

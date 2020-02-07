@@ -16,7 +16,7 @@ class Yielders{
       return switch (prx) {
         case Yield(y,arw) :
           Later(
-            fn.close(y).map(
+            fn.receive(y).map(
               (y1) -> Yield(y1,arw.then(mapa.bind(_,fn)))
             )
           );

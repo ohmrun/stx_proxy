@@ -6,8 +6,11 @@ import stx.proxy.core.head.Data.Proxy in ProxyT;
   public function new(v){
     this = v;
   }
-  public function flatMap<O>(fn:Arrowlet<R,Proxy<A,B,X,Y,O,E>>):Proxy<A,B,X,Y,O,E>{
-    return Proxies.flatMap(this,fn);
+  static public inline function lift<A,B,X,Y,R,E>(prx:ProxyT<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
+    return new Proxy(prx);
+  }
+  public function fmap<O>(fn:Arrowlet<R,Proxy<A,B,X,Y,O,E>>):Proxy<A,B,X,Y,O,E>{
+    return Proxies.fmap(this,fn);
   }
   public function reflect():Proxy<Y,X,B,A,R,E>{
     return Proxies.reflect(this);

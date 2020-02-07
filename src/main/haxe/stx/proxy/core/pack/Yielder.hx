@@ -4,16 +4,6 @@ package stx.proxy.core.pack;
   public function new(proxy){
     this = proxy;
   }
-  /*
-  public function map<Y1>(fn:Y->Y1):Yield<A,B,X,Y1,R,E>{
-    return Yields.map(this,fn);
-  }
-  public function tap(fn:Y->Void):Yield<A,B,X,Y,R,E>{
-    return Yields.tap(this,fn);
-  }
-  public function then<Y1>(fn:Arrowlet<Y,Y1>):Yield<A,B,X,Y1,R,E>{
-    return Yields.then(this,fn);
-  }*/
   public function prj():Proxy<A,B,X,Y,R,E>{
     return this;
   }

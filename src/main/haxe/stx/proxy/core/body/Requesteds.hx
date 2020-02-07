@@ -18,14 +18,10 @@ class Requesteds{
   (fb' \>\ fc') c' = fb' >\\ fc' c'
   {-# INLINABLE (\>\) #-}*/
   static public function compose<A,B,X,Y,M,N,O,E>(fn0:Arrowlet<X,Proxy<A,B,M,N,Y,E>>,fn1:Arrowlet<M,Proxy<X,Y,M,N,O,E>>):Arrowlet<M,Proxy<A,B,M,N,O,E>>{
-    return function(c:M,cont0:Strand<Proxy<A,B,M,N,O,E>>){
-      return fn1.withInput(c,
-        function(prx1){
-          var a = then(fn0,prx1);
-          return cont0.apply(a);
-        }
-      );
-    }
+    return __.arw().cont()(
+      (c:M,cont0:Continue<Proxy<A,B,M,N,O,E>>) -> 
+        fn1.prepare(c,(prx1,auto) -> cont0(then(fn0,prx1),auto))
+    );
   }
   /*  {-| @(f >\\\\ p)@ replaces each 'request' in @p@ with @f@.
 
@@ -49,7 +45,7 @@ class Requesteds{
         go = function(prx2:Proxy<X,Y,M,N,O,E>):Proxy<A,B,M,N,O,E>{
           return switch (prx2){
             case Ended(res)   : Ended(res);
-            case Await(a,arw) : Proxies.flatMap(Later(prx0.apply(a)),arw.then(go));
+            case Await(a,arw) : Proxies.fmap(Later(prx0.receive(a)),arw.then(go));
             case Yield(y,arw) : Yield(y,arw.then(go));
             case Later(ft)    : Later(ft.map(then.bind(prx0)));
           }

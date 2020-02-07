@@ -1,5 +1,12 @@
+
 class Main{
   static function main(){
-    utest.UTest.run(stx.proxy.core.Package.tests());
+    #if test
+      utest.UTest.run(
+        stx.proxy.core.Package.tests().concat(
+          stx.proxy.io.Package.tests()
+        )
+      );
+    #end
   }
 }
