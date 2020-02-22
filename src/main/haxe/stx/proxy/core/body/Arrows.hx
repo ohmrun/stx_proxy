@@ -8,8 +8,8 @@ class Arrows{
           (p:Proxy<A0,B0,X0,Y0,R0,E>,cont:Continue<Proxy<A1,B1,X1,Y1,R1,E>>) ->
             switch p {
               case Ended(Val(r))  : rhs.prepare(r,cont);
-              case Ended(End(e))  : cont(Ended(End(e)),Automation.unit());
-              case Ended(Tap)     : cont(Ended(Tap),Automation.unit());
+              case Ended(End(e))  : cont(Ended(End(e)),__);
+              case Ended(Tap)     : cont(Ended(Tap),__);
               default             : Arrows.then(lhs,rhs).prepare(p0,cont);
             }
         )

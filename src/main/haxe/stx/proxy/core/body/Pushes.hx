@@ -1,6 +1,4 @@
 package stx.proxy.core.body;
-
-import stx.run.head.data.Automation in AutomationT;
 import stx.run.head.data.Receiver in ReceiverT;
 
 class Pushes{
@@ -19,7 +17,7 @@ class Pushes{
           var b     = a.map(
             (b) -> Yield(b,
               __.arw().cont()(
-                (b,cont) -> cont(fromSignal(sig),Automation.unit())
+                (b,cont) -> cont(fromSignal(sig),__)
               )  
             )
           );

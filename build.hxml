@@ -1,5 +1,5 @@
 -main Main
---interp
+-js test/test.js
 
 -lib tink_core
 -lib utest
