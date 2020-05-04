@@ -1,5 +1,5 @@
 package stx.proxy.core.body;
-import stx.run.head.data.Receiver in ReceiverT;
+
 
 class Pushes{
   @:noUsing static public function pure<A,B,R,E>(b:B):Proxy<A,B,A,B,R,E>{
@@ -13,11 +13,11 @@ class Pushes{
     return Later(
       Receiver.lift(
         (next) -> {
-          var a     = Receivers.fromFuture(sig.nextTime());
+          var a     = Receiver.inj().fromFuture(sig.nextTime());
           var b     = a.map(
             (b) -> Yield(b,
               __.arw().cont()(
-                (b,cont) -> cont(fromSignal(sig),__)
+                (b,cont) -> cont(fromSignal(sig),Automation.unit())
               )  
             )
           );
@@ -40,7 +40,7 @@ class Pushes{
   */
   //(>~>)
   static public function pushing<A,B,X,Y,C,D,R,E>(prx0:Arrowlet<B,Proxy<A,B,X,Y,R,E>>,prx1:Arrowlet<Y,Proxy<X,Y,C,D,R,E>>):Arrowlet<B,Proxy<A,B,C,D,R,E>>{
-    return __.arw().cont()((b:B,cont:Continue<Proxy<A,B,C,D,R,E>>) ->
+    return __.arw().cont()((b:B,cont:Strand<Proxy<A,B,C,D,R,E>>) ->
       prx0.postfix(
         (br) -> Pushes.pusher(br,prx1)
       ).prepare(b,cont));

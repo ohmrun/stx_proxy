@@ -1,8 +1,8 @@
 package stx.proxy.core.pack;
 
-import stx.proxy.core.head.data.Pipe in PipeT;
+typedef PipeDef<B,Y,R,E>   = ProxySum<Noise,B,Noise,Y,R,E>;
 
-@:forward abstract Pipe<B,Y,R,E>(PipeT<B,Y,R,E>) from PipeT<B,Y,R,E> to PipeT<B,Y,R,E> {
+@:forward abstract Pipe<B,Y,R,E>(PipeDef<B,Y,R,E>) from PipeDef<B,Y,R,E> to PipeDef<B,Y,R,E> {
   public function new(self){
     this = self;
   }

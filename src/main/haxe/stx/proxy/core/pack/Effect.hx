@@ -1,15 +1,20 @@
 package stx.proxy.core.pack;
 
-import stx.proxy.core.head.data.Effect in EffectT;
+typedef EffectDef<R,E>     = ProxySum<Closed,Noise,Noise,Closed,R,E>;
 
-abstract Effect<R,E>(EffectT<R,E>) from EffectT<R,E> to EffectT<R,E>{
-  public function new(self){
-    this = self;
+abstract Effect<R,E>(EffectDef<R,E>) from EffectDef<R,E> to EffectDef<R,E>{
+  public function new(self) this = self;
+  static public function lift(self:EffectDef<R,E>) return new Effect(self);
+  
+  public function flat_map<O>(fn:Arrowlet<R,Effect<O,E>>):Effect<O,E>{
+    return lift(
+      Proxy._.flat_map(
+        this,
+        fn.then((x:Effect<O,E>)->x.prj())
+      )
+    );
   }
-  public function fmap<O>(fn:Arrowlet<R,Effect<O,E>>):Effect<O,E>{
-    return new Effect(Proxies.fmap(this,fn.then(__.arw().fn()((x:Effect<O,E>)->x.prj()))));
-  }
-  public function prj():EffectT<R,E>{
+  public function prj():EffectDef<R,E>{
     return this;
   }
 }

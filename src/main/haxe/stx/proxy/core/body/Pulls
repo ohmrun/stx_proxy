@@ -31,8 +31,8 @@ class Pulls{
   }
   @:noUsing static public function fromSignal<A,B,X,Y,R,E>(sig:Signal<A>):Proxy<A,B,A,B,R,E>{
     return Later(
-      Receivers.fromFuture(sig.nextTime()).map(
-        (v:A) -> Await(v,__.arw().cont()((b:B,cont:Continue<Proxy<A,B,A,B,R,E>>) ->
+      Receiver.inj.fromFuture(sig.nextTime()).map(
+        (v:A) -> Await(v,__.arw().cont()((b:B,cont:Strand<Proxy<A,B,A,B,R,E>>) ->
           cont(fromSignal(sig),Automation.unit())
         ))
       )
@@ -46,7 +46,7 @@ class Pulls{
       var fst   = next.shift();
       var rst   = next;
       return Await(fst,
-        __.arw().cont()(function(b:B,cont:Continue<Proxy<A,B,A,B,R,E>>){
+        __.arw().cont()(function(b:B,cont:Strand<Proxy<A,B,A,B,R,E>>){
           return cont(fromArray(rst),Automation.unit());
         })
       );

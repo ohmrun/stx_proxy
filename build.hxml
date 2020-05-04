@@ -5,7 +5,8 @@
 -lib utest
 
 -lib stx_arrowlet
--lib stx_core
+-lib stx_pico
+-lib stx_nano
 -lib stx_fn
 -lib stx_ds
 -lib stx_run

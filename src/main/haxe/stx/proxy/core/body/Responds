@@ -3,7 +3,7 @@ package stx.proxy.core.body;
 class Responds{
   //x' x a' a m a'
   @:noUsing static public function deferred<A,B,X,Y,E>(v:Future<Y>):Proxy<A,B,X,Y,X,E>{
-    return Later(Receivers.fromFuture(v.map(v->pure(v))));
+    return Later(Receiver.inj.fromFuture(v.map(v->pure(v))));
   }
   //x' x a' a m a'
   @:noUsing static public function pure<A,B,X,Y,E>(v:Y):Proxy<A,B,X,Y,X,E>{
