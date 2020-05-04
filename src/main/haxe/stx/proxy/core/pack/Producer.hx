@@ -7,7 +7,7 @@ typedef ProducerDef<Y,R,E> = ProxySum<Closed,Noise,Noise,Y,R,E>;
   public function new(self:ProducerDef<Y,R,E>){
     this = self;
   }
-  //public function consume(cns:Consumer<Y,R,E>):Effect<R,E>{
+  //public function consume(cns:Consumer<Y,R,E>):Outlet<R,E>{
     
   //}
 }

@@ -1,28 +1,17 @@
 package stx.proxy;
 
 
-import tink.CoreApi;
+using tink.CoreApi;
 
-import stx.core.head.Data;
-import stx.proxy.core.head.Data;
+using stx.Pico;
+using stx.Nano;
+using stx.Fn;
+using stx.Run;
+using stx.Arrowlet;
+using stx.Std;
 
-import stx.proxy.core.body.*;
+using stx.proxy.core.Package;
 
-import stx.fn.Package;
-import stx.core.Package;
-
-using stx.run.Pack;
-using stx.arrowlet.Pack;
-
-import stx.channel.Package;
-
-import stx.proxy.core.Package;
-
-using stx.core.Lift;
-using stx.fn.Lift;
-
-using stx.proxy.Lift;
-using stx.channel.Lift;
 
 
 

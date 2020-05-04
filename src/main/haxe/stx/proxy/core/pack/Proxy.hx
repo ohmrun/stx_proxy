@@ -1,13 +1,15 @@
 package stx.proxy.core.pack;
 
+import stx.core.pack.Y in YCombinator;
+
 enum ProxySum<A,B,X,Y,R,E>{
-  Await(v:A,arw:Unary<B,ProxyA<A,B,X,Y,R,E>>);
-  Yield(v:Y,arw:Unary<X,ProxyA<A,B,X,Y,R,E>>);
-  Later(ft:Void->Future<<ProxyA<A,B,X,Y,R,E>>>);
+  Await(a:A,arw:Unary<B,Proxy<A,B,X,Y,R,E>>);
+  Yield(y:Y,arw:Unary<X,Proxy<A,B,X,Y,R,E>>);
+  Defer(ft:Belay<A,B,X,Y,R,E>);
   Ended(res:Chunk<R,E>);
 }
 
-@:using(stx.proxy.core.pack.ProxyLift)
+@:using(stx.proxy.core.pack.Proxy.ProxyLift)
 @:forward abstract Proxy<A,B,X,Y,R,E>(ProxySum<A,B,X,Y,R,E>) from ProxySum<A,B,X,Y,R,E> to ProxySum<A,B,X,Y,R,E>{
   static public var _(default,never) = ProxyLift;
   public function new(v) this = v;
@@ -16,39 +18,51 @@ enum ProxySum<A,B,X,Y,R,E>{
     return new Proxy(prx);
   }
   @:noUsing static public function pull<A,B,X,Y,R,E>(a:A):Proxy<A,B,A,B,R,E>{
-    return Pulls.pure(a);
+    return Pull.pure(a);
   }
-  @:noUsing static public function push<A,B,R,E>(b:B):Proxy<A,B,A,B,R,E>{
-    return Pushes.pure(b);
-  }
-  @:noUsing static public function request<A,B,X,Y,R,E>(a:A):Proxy<A,B,X,Y,B,E>{
-    return Requests.pure(a);
-  }
-  @:noUsing static public function respond<A,B,X,Y,E>(y:Y):Proxy<A,B,X,Y,X,E>{
-    return Responds.pure(y);
-  }
+  // @:noUsing static public function push<A,B,R,E>(b:B):Proxy<A,B,A,B,R,E>{
+  //   return Push.pure(b);
+  // }
+  // @:noUsing static public function request<A,B,X,Y,R,E>(a:A):Proxy<A,B,X,Y,B,E>{
+  //   return Requesting.pure(a);
+  // }
+  // @:noUsing static public function respond<A,B,X,Y,E>(y:Y):Proxy<A,B,X,Y,X,E>{
+  //   return Respond.pure(y);
+  // }
 }
 class ProxyLift{ 
-  static public function flat_map<A,B,X,Y,R,O,E>(prx:Proxy<A,B,X,Y,R,E>,fn:Arrowlet<R,Proxy<A,B,X,Y,O,E>>):Proxy<A,B,X,Y,O,E>{
-    return switch (prx) {
-      case Await(a,arw) : Await(a,arw.then(flat_map.bind(_,fn)));
-      case Yield(y,arw) : Yield(y,arw.then(flat_map.bind(_,fn)));
-      case Ended(res)   : 
-        //TODO
-        res.fold(
-          (r) -> Later(fn.receive(r)), 
-          (e) -> Ended(End(e)),
-          ()  -> Ended(Tap)
-        );
-      case Later(ft)    : Later(ft.map(pr -> flat_map(pr,fn)));
+  //static public function fold<A,B,X,Y,R,E,Z>(self:Proxy<A,B,X,Y,R,E,Z>,await:A->(B->Proxy<A,B,X>)
+  static public function mod<A,B,X,Y,R,Ri,E>():YCombinator<Proxy<A,B,X,Y,R,E>,Proxy<A,B,X,Y,Ri,E>>{
+    return function rec(fn:YCombinator<Proxy<A,B,X,Y,R,E>,Proxy<A,B,X,Y,Ri,E>>){
+      return function (prx:Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,Ri,E>{
+        function f(prx:Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,Ri,E> return fn(rec)(prx);
+        return switch(prx){
+          case Await(a,arw)   : __.await(a,arw.then(f));
+          case Yield(y,arw)   : __.yield(y,arw.then(f));
+          case Defer(ft)      : __.belay(ft.mod(f));//careful
+          case Ended(res)     : f(__.ended(res));//careful
+        }
+      }
     }
+  }
+  static public function flat_map<A,B,X,Y,R,O,E>(prx:Proxy<A,B,X,Y,R,E>,fn:Unary<R,Proxy<A,B,X,Y,O,E>>):Proxy<A,B,X,Y,O,E>{
+    return(
+      function rec(fny:YCombinator<Proxy<A,B,X,Y,R,E>,Proxy<A,B,X,Y,O,E>>){
+        return (prx:Proxy<A,B,X,Y,R,E>) -> {
+          return switch(prx){
+            case Ended(chk)     : chk.fold(fn,(e) -> Ended(End(e)), () -> Ended(Tap));
+            default             : fny(rec)(prx);
+          }
+        }
+      }
+    )(mod())(prx);
   }
   static public function map<A,B,X,Y,R,O,E>(prx:Proxy<A,B,X,Y,R,E>,fn:R->O):Proxy<A,B,X,Y,O,E>{
     return switch (prx) {
       case Ended(res)   : Ended(res.map(fn));
       case Await(a,arw) : Await(a,arw.then(map.bind(_,fn)));
       case Yield(y,arw) : Yield(y,arw.then(map.bind(_,fn)));
-      case Later(ft)    : Later(ft.map(map.bind(_,fn)));
+      case Defer(ft)    : __.belay(ft.mod(map.bind(_,fn)));
     }
 
   }
@@ -57,7 +71,7 @@ class ProxyLift{
       case Await(a,arw) : Yield(a,arw.then(reflect));
       case Yield(a,arw) : Await(a,arw.then(reflect));
       case Ended(r)     : Ended(r);
-      case Later(prx)   : Later(prx.map(reflect));
+      case Defer(prx)   : __.belay(prx.mod(reflect));
     }
   }
 }
