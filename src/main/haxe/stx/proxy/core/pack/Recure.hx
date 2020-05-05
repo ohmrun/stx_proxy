@@ -7,7 +7,7 @@ typedef RecureDef<B,Y,R,E>   = ProxySum<Noise,B,Noise,Y,R,E>;
     this = self;
   }
   public function fill(th:Thunk<B>):Producer<Y,R,E>{
-    var a                                   = Pull.puller.bind(_,this);
+    var a                                   = PullCat._.next.bind(_,this);
     var b                                   = function rec(_:Noise) return Yield(th(),rec);
     var c : Proxy<Closed,Noise,Noise,Y,R,E> = a(b);
     return new Producer(c);
