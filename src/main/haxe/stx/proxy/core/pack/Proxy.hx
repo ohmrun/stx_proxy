@@ -14,7 +14,7 @@ enum ProxySum<A,B,X,Y,R,E>{
   static public var _(default,never) = ProxyLift;
   public function new(v) this = v;
   
-  static public inline function lift<A,B,X,Y,R,E>(prx:ProxySum<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
+  @:noUsing static public inline function lift<A,B,X,Y,R,E>(prx:ProxySum<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
     return new Proxy(prx);
   }
   @:noUsing static public function pull<A,B,X,Y,R,E>(a:A):Proxy<A,B,A,B,R,E>{

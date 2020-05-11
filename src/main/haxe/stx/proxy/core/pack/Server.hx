@@ -10,6 +10,6 @@ typedef ServerDef<X,Y,R,E> = ProxySum<Closed,Noise,X,Y,R,E>;
     return this;
   }
   public function reflect():Client<Y,X,R,E>{
-    return Proxy._.reflect(this);
+    return Client.lift(Proxy._.reflect(this));
   }
 }

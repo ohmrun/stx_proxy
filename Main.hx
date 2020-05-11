@@ -1,4 +1,4 @@
-import stx.proxy.core.Package;
+using stx.proxy.Pack;
 
 class Main{
   static function main(){

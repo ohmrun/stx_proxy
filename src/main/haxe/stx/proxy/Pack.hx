@@ -1,4 +1,4 @@
-package stx.proxy.core;
+package stx.proxy;
 
 /**
   Gabriel Gonzalez' "Haskell Pipes"
@@ -11,9 +11,10 @@ typedef Server<X,Y,R,E>                   = stx.proxy.core.pack.Server<X,Y,R,E>;
 
 typedef ProducerDef<Y,R,E>                = stx.proxy.core.pack.Producer.ProducerDef<Y,R,E>;
 typedef Producer<Y,R,E>                   = stx.proxy.core.pack.Producer<Y,R,E>;
-typedef ConsumerDef<Y,R,E>                = stx.proxy.core.pack.Consumer.ConsumerDef<Y,R,E>;
+typedef ConsumerDef<B,R,E>                = stx.proxy.core.pack.Consumer.ConsumerDef<B,R,E>;
 typedef Consumer<B,R,E>                   = stx.proxy.core.pack.Consumer<B,R,E>;
 
+typedef Defect<E>                         = stx.proxy.core.pack.Defect<E>;
 typedef Outlet<R,E>                       = stx.proxy.core.pack.Outlet<R,E>;
 typedef Access<Y,E>                       = stx.proxy.core.pack.Access<Y,E>;  
 typedef Recure<B,Y,R,E>                   = stx.proxy.core.pack.Recure<B,Y,R,E>;
