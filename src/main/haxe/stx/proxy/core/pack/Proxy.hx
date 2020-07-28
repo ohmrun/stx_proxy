@@ -1,6 +1,6 @@
 package stx.proxy.core.pack;
 
-import stx.core.pack.Y in YCombinator;
+import stx.nano.Y in YCombinator;
 
 enum ProxySum<A,B,X,Y,R,E>{
   Await(a:A,arw:Unary<B,Proxy<A,B,X,Y,R,E>>);

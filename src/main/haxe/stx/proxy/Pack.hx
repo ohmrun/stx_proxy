@@ -1,18 +1,26 @@
 package stx.proxy;
 
+//Drain
 /**
   Gabriel Gonzalez' "Haskell Pipes"
 **/
 typedef ProxySum<A,B,X,Y,R,E>             = stx.proxy.core.pack.Proxy.ProxySum<A,B,X,Y,R,E>;
 typedef Proxy<A,B,X,Y,R,E>                = stx.proxy.core.pack.Proxy<A,B,X,Y,R,E>;
 
-typedef Client<A,B,R,E>                   = stx.proxy.core.pack.Client<A,B,R,E>;
 typedef Server<X,Y,R,E>                   = stx.proxy.core.pack.Server<X,Y,R,E>;
+typedef Client<A,B,R,E>                   = stx.proxy.core.pack.Client<A,B,R,E>;
+
+typedef ActuatorDef<Y,E>                  = stx.proxy.core.pack.Actuator.ActuatorDef<Y,E>;
+typedef Actuator<Y,E>                     = stx.proxy.core.pack.Actuator<Y,E>;
 
 typedef ProducerDef<Y,R,E>                = stx.proxy.core.pack.Producer.ProducerDef<Y,R,E>;
 typedef Producer<Y,R,E>                   = stx.proxy.core.pack.Producer<Y,R,E>;
+
 typedef ConsumerDef<B,R,E>                = stx.proxy.core.pack.Consumer.ConsumerDef<B,R,E>;
 typedef Consumer<B,R,E>                   = stx.proxy.core.pack.Consumer<B,R,E>;
+
+typedef DispatchDef<B,E>                  = Dispatch<B,E>;
+typedef Dispatch<B,E>                     = ProxySum<Noise,B,Closed,Noise,Noise,E>;
 
 typedef Defect<E>                         = stx.proxy.core.pack.Defect<E>;
 typedef Outlet<R,E>                       = stx.proxy.core.pack.Outlet<R,E>;

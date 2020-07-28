@@ -30,11 +30,11 @@ abstract Pull<A,B,X,Y,R,E>(ProxySum<A,B,X,Y,R,E>) from ProxySum<A,B,X,Y,R,E> to 
   }
   @:noUsing static public function fromSignal<A,B,X,Y,R,E>(sig:Signal<A>):Proxy<A,B,A,B,R,E>{
     return __.belay(
-      () -> sig.nextTime().map(
+      Belay.fromFuture(() -> sig.nextTime().map(
         (v:A) -> Await(v,
           (b:B) -> fromSignal(sig)
         )
-      )
+      ))
     );
   }
   @:noUsing static public function fromArray<A,B,X,Y,R,E>(arr:Array<A>):Proxy<A,B,A,B,R,E>{

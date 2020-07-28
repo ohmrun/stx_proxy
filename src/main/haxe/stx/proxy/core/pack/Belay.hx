@@ -13,7 +13,7 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
     return lift(Forward.fromFunXFuture(() -> fn()));
   }
   @:noUsing static public function lazy<A,B,X,Y,R,E>(fn:Thunk<Proxy<A,B,X,Y,R,E>>):Belay<A,B,X,Y,R,E>{
-    return lift(Forward.fromFunXFuture(() -> Future.async(
+    return lift(Forward.fromFunXFuture(() -> Future.irreversible(
       (cb) -> cb(fn())
     )));
   }
@@ -26,11 +26,11 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
   public function mod<Ai,Bi,Xi,Yi,Ri>(fn:Proxy<A,B,X,Y,R,E>->Proxy<Ai,Bi,Xi,Yi,Ri,E>):Belay<Ai,Bi,Xi,Yi,Ri,E>{
     return lift(Arrowlet._.postfix(this,fn));
   }
-  public function and_with<Ai,Aii,Bi,Bii,Xi,Xii,Yi,Yii,Ri,Rii,E>(that:Belay<Ai,Bi,Xi,Yi,Ri,E>,fn:Proxy<A,B,X,Y,R,E>->Proxy<Ai,Bi,Xi,Yi,Ri,E>->Proxy<Aii,Bii,Xii,Yii,Rii,E>):Belay<Aii,Bii,Xii,Yii,Rii,E>{
+  public function and_with<Ai,Aii,Bi,Bii,Xi,Xii,Yi,Yii,Ri,Rii>(that:Belay<Ai,Bi,Xi,Yi,Ri,E>,fn:Proxy<A,B,X,Y,R,E>->Proxy<Ai,Bi,Xi,Yi,Ri,E>->Proxy<Aii,Bii,Xii,Yii,Rii,E>):Belay<Aii,Bii,Xii,Yii,Rii,E>{
     return Forward._.and(
       this,
       that
-    ).process(__.decouple(fn));
+    ).process(Process.fromFun1R(__.decouple(fn)));
   }
   @:to public function toProxy():Proxy<A,B,X,Y,R,E>{
     return Defer(this);

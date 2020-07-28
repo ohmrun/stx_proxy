@@ -8,7 +8,7 @@ package stx.proxy.core.pack;
   }
    //x' x a' a m a'
    @:noUsing static public function deferred<A,B,X,Y,E>(v:Future<Y>):Proxy<A,B,X,Y,X,E>{
-    return Defer(() -> v.map(pure));
+    return Defer(Belay.fromFuture(() -> v.map(pure)));
   }
   //x' x a' a m a'
   @:noUsing static public function pure<A,B,X,Y,E>(v:Y):Proxy<A,B,X,Y,X,E>{

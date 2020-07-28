@@ -11,12 +11,12 @@ abstract Push<A,B,X,Y,R,E>(ProxySum<A,B,X,Y,R,E>) from ProxySum<A,B,X,Y,R,E> to 
   }
   @:noUsing static public function fromSignal<A,B,X,Y,R,E>(sig:Signal<B>):Proxy<A,B,A,B,R,E>{
     return __.belay(
-      () -> sig.nextTime().map(
+      Belay.fromFuture(() -> sig.nextTime().map(
         (b) -> Yield(
           b,
           (_) -> fromSignal(sig)
         )
-      )
+      ))
     );
   }  
 

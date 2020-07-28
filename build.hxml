@@ -10,6 +10,8 @@
 -lib stx_fn
 -lib stx_ds
 -lib stx_run
+-lib stx_async
+-lib stx_coroutine
 
 -cp src/main/haxe
 

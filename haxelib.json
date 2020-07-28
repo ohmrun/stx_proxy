@@ -16,10 +16,11 @@
         "tink_core": "",
         "stx_pico": "",
         "stx_nano": "",
-        "stx_std": "",
+        "stx_ext": "",
         "stx_fn": "",
         "stx_ds": "",
-        "stx_arrowlet": ""
+        "stx_arrowlet": "",
+        "stx_coroutine": ""
     },
     "classPath": "src/main/haxe"
 }
