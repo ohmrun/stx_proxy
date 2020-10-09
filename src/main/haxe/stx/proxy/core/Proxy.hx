@@ -1,6 +1,5 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
-import stx.nano.Y in YCombinator;
 
 enum ProxySum<A,B,X,Y,R,E>{
   Await(a:A,arw:Unary<B,Proxy<A,B,X,Y,R,E>>);
@@ -9,8 +8,9 @@ enum ProxySum<A,B,X,Y,R,E>{
   Ended(res:Chunk<R,E>);
 }
 
-@:using(stx.proxy.core.pack.Proxy.ProxyLift)
+@:using(stx.proxy.core.Proxy.ProxyLift)
 @:forward abstract Proxy<A,B,X,Y,R,E>(ProxySum<A,B,X,Y,R,E>) from ProxySum<A,B,X,Y,R,E> to ProxySum<A,B,X,Y,R,E>{
+
   static public var _(default,never) = ProxyLift;
   public function new(v) this = v;
   
@@ -32,30 +32,31 @@ enum ProxySum<A,B,X,Y,R,E>{
 }
 class ProxyLift{ 
   //static public function fold<A,B,X,Y,R,E,Z>(self:Proxy<A,B,X,Y,R,E,Z>,await:A->(B->Proxy<A,B,X>)
-  static public function mod<A,B,X,Y,R,Ri,E>():YCombinator<Proxy<A,B,X,Y,R,E>,Proxy<A,B,X,Y,Ri,E>>{
-    return function rec(fn:YCombinator<Proxy<A,B,X,Y,R,E>,Proxy<A,B,X,Y,Ri,E>>){
-      return function (prx:Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,Ri,E>{
-        function f(prx:Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,Ri,E> return fn(rec)(prx);
-        return switch(prx){
-          case Await(a,arw)   : __.await(a,arw.then(f));
-          case Yield(y,arw)   : __.yield(y,arw.then(f));
-          case Defer(ft)      : __.belay(ft.mod(f));//careful
-          case Ended(res)     : f(__.ended(res));//careful
-        }
-      }
-    }
-  }
+  // static public function mod<A,B,X,Y,R,Ri,E>():YCombinator<Proxy<A,B,X,Y,R,E>,Proxy<A,B,X,Y,Ri,E>>{
+  //   return function rec(fn:YCombinator<Proxy<A,B,X,Y,R,E>,Proxy<A,B,X,Y,Ri,E>>){
+  //     return function (prx:Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,Ri,E>{
+  //       function f(prx:Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,Ri,E> return fn(rec)(prx);
+  //       return switch(prx){
+  //         case Await(a,arw)   : __.await(a,arw.then(f));
+  //         case Yield(y,arw)   : __.yield(y,arw.then(f));
+  //         case Defer(ft)      : __.belay(ft.mod(f));//careful
+  //         case Ended(res)     : f(__.ended(res));//careful
+  //       }
+  //     }
+  //   }
+  // }
   static public function flat_map<A,B,X,Y,R,O,E>(prx:Proxy<A,B,X,Y,R,E>,fn:Unary<R,Proxy<A,B,X,Y,O,E>>):Proxy<A,B,X,Y,O,E>{
-    return(
-      function rec(fny:YCombinator<Proxy<A,B,X,Y,R,E>,Proxy<A,B,X,Y,O,E>>){
-        return (prx:Proxy<A,B,X,Y,R,E>) -> {
-          return switch(prx){
-            case Ended(chk)     : chk.fold(fn,(e) -> Ended(End(e)), () -> Ended(Tap));
-            default             : fny(rec)(prx);
-          }
-        }
-      }
-    )(mod())(prx);
+    var f = flat_map.bind(_,fn);
+    return switch(prx){
+      case Await(a,arw) : Await(a,arw.then(f));
+      case Yield(y,arw) : Yield(y,arw.then(f));
+      case Defer(ft)    : Defer(ft.mod(f));
+      case Ended(res)   : res.fold(
+        fn,
+        (e) -> Ended(End(e)),
+        ()  -> Ended(Tap)
+      );
+    }
   }
   static public function map<A,B,X,Y,R,O,E>(prx:Proxy<A,B,X,Y,R,E>,fn:R->O):Proxy<A,B,X,Y,O,E>{
     return switch (prx) {

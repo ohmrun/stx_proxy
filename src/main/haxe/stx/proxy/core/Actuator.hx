@@ -1,8 +1,8 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef ActuatorDef<Y,E> = ProxySum<Noise,Closed,Closed,Y,Noise,E>;
 
-@:using(stx.proxy.core.pack.Actuator.ActuatorLift)
+@:using(stx.proxy.core.Actuator.ActuatorLift)
 abstract Actuator<Y,E>(ActuatorDef<Y,E>) from ActuatorDef<Y,E> to ActuatorDef<Y,E>{
   public function new(self) this = self;
   static public function lift<Y,E>(self:ActuatorDef<Y,E>):Actuator<Y,E> return new Actuator(self);

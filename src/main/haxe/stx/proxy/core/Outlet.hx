@@ -1,4 +1,4 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef OutletDef<R,E>     = ProxySum<Closed,Noise,Noise,Closed,R,E>;
 

@@ -1,4 +1,4 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef RecureDef<B,Y,R,E>   = ProxySum<Noise,B,Noise,Y,R,E>;
 

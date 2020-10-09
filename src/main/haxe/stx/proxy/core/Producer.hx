@@ -1,8 +1,8 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef ProducerDef<Y,R,E> = ProxySum<Closed,Noise,Noise,Y,R,E>;
 
-@:using(stx.proxy.core.pack.Producer.ProducerLift)
+@:using(stx.proxy.core.Producer.ProducerLift)
 @:forward abstract Producer<Y,R,E>(ProducerDef<Y,R,E>) from ProducerDef<Y,R,E> to ProducerDef<Y,R,E> {
   static public var _(default,never) = ProducerLift;
   @:noUsing static public function lift<Y,R,E>(self:ProducerDef<Y,R,E>):Producer<Y,R,E>{

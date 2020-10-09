@@ -1,16 +1,17 @@
+-D no-deprecation-warnings
 -main Main
 -js test/test.js
 
 -lib tink_core
 -lib utest
 
--lib stx_arrowlet
--lib stx_pico
--lib stx_nano
--lib stx_fn
+-lib stx_arw
+-lib stx_pico:1.0.0
+-lib stx_nano:0.1.5
+-lib stx_fn:1.0.0
 -lib stx_ds
 -lib stx_run
--lib stx_async
+-lib stx_async:1.0.1
 -lib stx_coroutine
 
 -cp src/main/haxe

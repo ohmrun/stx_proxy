@@ -1,4 +1,4 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 // class Yielder{
 //   @:noUsing static public function map<A,B,X,Y,R,Y1,E>(prx:Proxy<A,B,X,Y,R,E>,fn:Y->Y1):Proxy<A,B,X,Y1,R,E>{

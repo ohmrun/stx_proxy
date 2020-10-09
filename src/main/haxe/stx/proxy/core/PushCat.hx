@@ -1,8 +1,8 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef PushCatDef<P,A,B,X,Y,R,E> = Unary<P,Proxy<A,B,X,Y,R,E>>;
 
-@:using(stx.proxy.core.pack.PushCat.PushCatLift)
+@:using(stx.proxy.core.PushCat.PushCatLift)
 abstract PushCat<P,A,B,X,Y,R,E>(PushCatDef<P,A,B,X,Y,R,E>) from PushCatDef<P,A,B,X,Y,R,E> to PushCatDef<P,A,B,X,Y,R,E>{
   static public var _(default,never) = PushCatLift;
   public function new(self){

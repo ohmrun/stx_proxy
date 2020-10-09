@@ -1,3 +1,4 @@
+
 {
     "name": "stx_proxy",
     "license": "MIT",
@@ -17,9 +18,9 @@
         "stx_pico": "",
         "stx_nano": "",
         "stx_ext": "",
-        "stx_fn": "",
+        "stx_fn": "1.0.0",
         "stx_ds": "",
-        "stx_arrowlet": "",
+        "stx_arw": "",
         "stx_coroutine": ""
     },
     "classPath": "src/main/haxe"

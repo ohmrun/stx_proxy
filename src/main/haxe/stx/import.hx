@@ -10,5 +10,7 @@ using stx.Async;
 using stx.Ext;
 using stx.Arw;
 
-using stx.coroutine.Pack;
-using stx.proxy.Pack;
+using stx.Coroutine;
+using stx.coroutine.Core;
+
+using stx.Proxy;

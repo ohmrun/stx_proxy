@@ -1,8 +1,8 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef PullCatDef<P,A,B,X,Y,R,E> = Unary<P,Proxy<A,B,X,Y,R,E>>;
 
-@:using(stx.proxy.core.pack.PullCat.PullCatLift)
+@:using(stx.proxy.core.PullCat.PullCatLift)
 abstract PullCat<P,A,B,X,Y,R,E>(PullCatDef<P,A,B,X,Y,R,E>) from PullCatDef<P,A,B,X,Y,R,E> to PullCatDef<P,A,B,X,Y,R,E>{
   static public var _(default,never) = PullCatLift;
   public function new(self){

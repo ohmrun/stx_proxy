@@ -1,4 +1,4 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef AccessDef<Y,E> = ProducerDef<Y,Noise,E>;
 

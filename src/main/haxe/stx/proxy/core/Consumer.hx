@@ -1,4 +1,4 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef ConsumerDef<B,R,E> = ProxySum<Noise,B,Noise,Closed,R,E>; 
 

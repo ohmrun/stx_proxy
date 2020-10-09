@@ -1,4 +1,4 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 
 abstract Closed(Dynamic) from Dynamic to Dynamic{

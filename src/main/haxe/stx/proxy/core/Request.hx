@@ -1,6 +1,6 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
-@:using(stx.proxy.core.pack.Request.RequestLift)
+@:using(stx.proxy.core.Request.RequestLift)
 @:forward abstract Request<A,B,M,N,Y,E>(ProxySum<A,B,M,N,Y,E>) from ProxySum<A,B,M,N,Y,E> to ProxySum<A,B,M,N,Y,E>{
   static public var _(default,never) = RequestLift;
   public function new(self){

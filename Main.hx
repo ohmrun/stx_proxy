@@ -1,4 +1,4 @@
-using stx.proxy.Pack;
+using stx.Proxy;
 
 class Main{
   static function main(){

@@ -1,4 +1,4 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
 typedef ServerDef<X,Y,R,E> = ProxySum<Closed,Noise,X,Y,R,E>;
 

@@ -1,6 +1,6 @@
-package stx.proxy.core.pack;
+package stx.proxy.core;
 
-typedef BelayDef<A,B,X,Y,R,E> = ForwardDef<Proxy<A,B,X,Y,R,E>>;
+typedef BelayDef<A,B,X,Y,R,E> = ProvideDef<Proxy<A,B,X,Y,R,E>>;
 
 abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to BelayDef<A,B,X,Y,R,E>{
   public function new(self) this = self;
@@ -10,10 +10,10 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
     return lazy(fn);
   }
   @:from static public function fromFuture<A,B,X,Y,R,E>(fn:Thunk<Future<Proxy<A,B,X,Y,R,E>>>):Belay<A,B,X,Y,R,E>{
-    return lift(Forward.fromFunXFuture(() -> fn()));
+    return lift(Provide.fromFunXFuture(() -> fn()));
   }
   @:noUsing static public function lazy<A,B,X,Y,R,E>(fn:Thunk<Proxy<A,B,X,Y,R,E>>):Belay<A,B,X,Y,R,E>{
-    return lift(Forward.fromFunXFuture(() -> Future.irreversible(
+    return lift(Provide.fromFunXFuture(() -> Future.irreversible(
       (cb) -> cb(fn())
     )));
   }
@@ -27,10 +27,10 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
     return lift(Arrowlet._.postfix(this,fn));
   }
   public function and_with<Ai,Aii,Bi,Bii,Xi,Xii,Yi,Yii,Ri,Rii>(that:Belay<Ai,Bi,Xi,Yi,Ri,E>,fn:Proxy<A,B,X,Y,R,E>->Proxy<Ai,Bi,Xi,Yi,Ri,E>->Proxy<Aii,Bii,Xii,Yii,Rii,E>):Belay<Aii,Bii,Xii,Yii,Rii,E>{
-    return Forward._.and(
+    return Provide._.and(
       this,
       that
-    ).process(Process.fromFun1R(__.decouple(fn)));
+    ).convert(Convert.fromFun1R(__.decouple(fn)));
   }
   @:to public function toProxy():Proxy<A,B,X,Y,R,E>{
     return Defer(this);
@@ -38,7 +38,7 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
   @:to public function toArrowlet():Arrowlet<Noise,Proxy<A,B,X,Y,R,E>,Noise>{
     return this;
   }
-  @:from static public function fromForward<A,B,X,Y,R,E>(self:Forward<Proxy<A,B,X,Y,R,E>>){
+  @:from static public function fromProvide<A,B,X,Y,R,E>(self:Provide<Proxy<A,B,X,Y,R,E>>){
     return lift(self);
   }
   @:from static public function fromArrowlet<A,B,X,Y,R,E>(self:Arrowlet<Noise,Proxy<A,B,X,Y,R,E>,Noise>){
