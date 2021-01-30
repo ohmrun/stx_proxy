@@ -22,7 +22,7 @@ typedef Consumer<B,R,E>                   = stx.proxy.core.Consumer<B,R,E>;
 typedef DispatchDef<B,E>                  = Dispatch<B,E>;
 typedef Dispatch<B,E>                     = ProxySum<Noise,B,Closed,Noise,Noise,E>;
 
-typedef Defect<E>                         = stx.proxy.core.Defect<E>;
+typedef Action<E>                         = stx.proxy.core.Action<E>;
 typedef Outlet<R,E>                       = stx.proxy.core.Outlet<R,E>;
 typedef Access<Y,E>                       = stx.proxy.core.Access<Y,E>;  
 typedef Recure<B,Y,R,E>                   = stx.proxy.core.Recure<B,Y,R,E>;

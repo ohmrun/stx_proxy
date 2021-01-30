@@ -10,18 +10,20 @@
     "contributors": [
         "0b1kn00b"
     ],
-    "releasenote": "Wow, can post past version. oops",
-    "version": "0.0.1",
+    "releasenote": "see CHANGELOG.md",
+    "version": "0.1.0",
     "url": "https://github.com/0b1kn00b/",
     "dependencies": {
-        "tink_core": "",
-        "stx_pico": "",
-        "stx_nano": "",
-        "stx_ext": "",
-        "stx_fn": "1.0.0",
-        "stx_ds": "",
-        "stx_arw": "",
-        "stx_coroutine": ""
+        "tink_core"     : "git:https://github.com/haxetink/tink_core.git",
+
+        "stx_pico"      : "git:https://github.com/ohmrun/stx_pico.git",
+        "stx_nano"      : "git:https://github.com/ohmrun/stx_nano.git",
+        "stx_fn"        : "git:https://github.com/ohmrun/stx_fn.git",
+
+        "stx_ds"        : "git:https://github.com/ohmrun/stx_ds.git",
+
+        "stx_arw"        : "git:https://github.com/ohmrun/stx_arw.git",
+        "stx_coroutine"  : "git:https://github.com/ohmrun/stx_coroutine.git"
     },
     "classPath": "src/main/haxe"
 }
