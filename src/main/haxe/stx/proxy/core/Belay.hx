@@ -24,7 +24,7 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
   private function get_self():Belay<A,B,X,Y,R,E> return lift(this);
 
   public function mod<Ai,Bi,Xi,Yi,Ri>(fn:Proxy<A,B,X,Y,R,E>->Proxy<Ai,Bi,Xi,Yi,Ri,E>):Belay<Ai,Bi,Xi,Yi,Ri,E>{
-    return lift(Arrowlet._.postfix(this,fn));
+    return lift(Fletcher._.map(this,fn));
   }
   public function and_with<Ai,Aii,Bi,Bii,Xi,Xii,Yi,Yii,Ri,Rii>(that:Belay<Ai,Bi,Xi,Yi,Ri,E>,fn:Proxy<A,B,X,Y,R,E>->Proxy<Ai,Bi,Xi,Yi,Ri,E>->Proxy<Aii,Bii,Xii,Yii,Rii,E>):Belay<Aii,Bii,Xii,Yii,Rii,E>{
     return Provide._.and(
@@ -35,13 +35,13 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
   @:to public function toProxy():Proxy<A,B,X,Y,R,E>{
     return Defer(this);
   }
-  @:to public function toArrowlet():Arrowlet<Noise,Proxy<A,B,X,Y,R,E>,Noise>{
+  @:to public function toFletcher():Fletcher<Noise,Proxy<A,B,X,Y,R,E>,Noise>{
     return this;
   }
   @:from static public function fromProvide<A,B,X,Y,R,E>(self:Provide<Proxy<A,B,X,Y,R,E>>){
     return lift(self);
   }
-  @:from static public function fromArrowlet<A,B,X,Y,R,E>(self:Arrowlet<Noise,Proxy<A,B,X,Y,R,E>,Noise>){
+  @:from static public function fromFletcher<A,B,X,Y,R,E>(self:Fletcher<Noise,Proxy<A,B,X,Y,R,E>,Noise>){
     return lift(self);
   }
 }

@@ -5,13 +5,13 @@
 -lib tink_core
 -lib utest
 
--lib stx_arw
 -lib stx_pico
 -lib stx_nano
 -lib stx_fn
 -lib stx_ds
--lib stx_async
 -lib stx_coroutine
+
+-lib fletcher
 
 -cp src/main/haxe
 

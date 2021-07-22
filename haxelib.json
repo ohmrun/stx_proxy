@@ -22,8 +22,9 @@
 
         "stx_ds"        : "git:https://github.com/ohmrun/stx_ds.git",
 
-        "stx_arw"        : "git:https://github.com/ohmrun/stx_arw.git",
-        "stx_coroutine"  : "git:https://github.com/ohmrun/stx_coroutine.git"
+        "stx_coroutine" : "git:https://github.com/ohmrun/stx_coroutine.git",
+
+        "fletcher"      : "git:https://github.com/ohmrun/fletcher.git"
     },
     "classPath": "src/main/haxe"
 }
