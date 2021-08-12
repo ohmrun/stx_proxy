@@ -17,4 +17,10 @@ abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
   public function prj():OutletDef<R,E>{
     return this;
   }
+  @:noUsing static public function pure<R,E>(self:R):Outlet<R,E>{
+    return lift(Ended(Val(self)));
+  }
+  @:noUsing static public function make<R,E>(self:Chunk<R,E>){
+    return lift(Ended(self));
+  }
 }

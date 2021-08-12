@@ -7,6 +7,8 @@ package stx;
 typedef ProxySum<A,B,X,Y,R,E>             = stx.proxy.core.Proxy.ProxySum<A,B,X,Y,R,E>;
 typedef Proxy<A,B,X,Y,R,E>                = stx.proxy.core.Proxy<A,B,X,Y,R,E>;
 
+
+typedef ServerDef<X,Y,R,E>                = stx.proxy.core.Server.ServerDef<X,Y,R,E>;
 typedef Server<X,Y,R,E>                   = stx.proxy.core.Server<X,Y,R,E>;
 typedef Client<A,B,R,E>                   = stx.proxy.core.Client<A,B,R,E>;
 
@@ -23,6 +25,7 @@ typedef DispatchDef<B,E>                  = Dispatch<B,E>;
 typedef Dispatch<B,E>                     = ProxySum<Noise,B,Closed,Noise,Noise,E>;
 
 typedef Action<E>                         = stx.proxy.core.Action<E>;
+typedef OutletDef<R,E>                    = stx.proxy.core.Outlet.OutletDef<R,E>;
 typedef Outlet<R,E>                       = stx.proxy.core.Outlet<R,E>;
 typedef Access<Y,E>                       = stx.proxy.core.Access<Y,E>;  
 typedef Recure<B,Y,R,E>                   = stx.proxy.core.Recure<B,Y,R,E>;
@@ -44,14 +47,15 @@ typedef RespondCatLift                    = stx.proxy.core.RespondCat.RespondCat
 
 typedef Pull<A,B,X,Y,R,E>                 = stx.proxy.core.Pull<A,B,X,Y,R,E>;
 typedef PullLift                          = stx.proxy.core.Pull.PullLift;
-typedef PullCat<P,A,B,X,Y,R,E>          = stx.proxy.core.PullCat<P,A,B,X,Y,R,E>;
-typedef PullCatLift                     = stx.proxy.core.PullCat.PullCatLift;
+typedef PullCat<P,A,B,X,Y,R,E>            = stx.proxy.core.PullCat<P,A,B,X,Y,R,E>;
+typedef PullCatLift                       = stx.proxy.core.PullCat.PullCatLift;
 
 typedef Push<A,B,X,Y,R,E>                 = stx.proxy.core.Push<A,B,X,Y,R,E>;
 typedef PushLift                          = stx.proxy.core.Push.PushLift;
-typedef PushCat<P,A,B,X,Y,R,E>          = stx.proxy.core.PushCat<P,A,B,X,Y,R,E>;
-typedef PushCatLift                     = stx.proxy.core.PushCat.PushCatLift;
+typedef PushCat<P,A,B,X,Y,R,E>            = stx.proxy.core.PushCat<P,A,B,X,Y,R,E>;
+typedef PushCatLift                       = stx.proxy.core.PushCat.PushCatLift;
 
+typedef ProxyFailure                      = stx.fail.ProxyFailure;
 
 class LiftProxyCommands{
   static public function belay<A,B,X,Y,R,E>(wildcard:Wildcard,belay:Belay<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{

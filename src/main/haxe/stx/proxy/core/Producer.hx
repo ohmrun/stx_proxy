@@ -11,6 +11,12 @@ typedef ProducerDef<Y,R,E> = ProxySum<Closed,Noise,Noise,Y,R,E>;
   public function new(self:ProducerDef<Y,R,E>){
     this = self;
   }
+  @:noUsing static public function pure<Y,R,E>(self:R){
+    return lift(Ended(Val(self)));
+  }
+  public function prj():ProducerDef<Y,R,E>{
+    return this;
+  }
   //public function consume(cns:Consumer<Y,R,E>):Outlet<R,E>{
     
   //}
