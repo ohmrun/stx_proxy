@@ -40,4 +40,7 @@ class ServerLift{
   static public function next<X,Y,C,D,R,E>(self:ProxySum<Closed,Noise,X,Y,R,E>,fn:Unary<Y,Proxy<X,Y,C,D,R,E>>):Server<C,D,R,E>{
     return Server.lift(PushCat._.next(self,fn));
   }
+  // static public function bind<A,B,X,Y,R,E>(self:ProxySum<Closed,Noise,X,Y,R,E>,that:ProxySum<Y,X,Noise,Closed,R,E>){
+  //   return switch(self)
+  // }
 }
