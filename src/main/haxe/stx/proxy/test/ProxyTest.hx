@@ -1,9 +1,9 @@
 package stx.proxy.test;
 
 
-class ProxyTest extends utest.Test{
+class ProxyTest extends TestCase{
   public function test(){
-   pass();
+   
   }
 }
 

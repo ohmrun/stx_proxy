@@ -40,7 +40,15 @@ class ServerLift{
   static public function next<X,Y,C,D,R,E>(self:ProxySum<Closed,Noise,X,Y,R,E>,fn:Unary<Y,Proxy<X,Y,C,D,R,E>>):Server<C,D,R,E>{
     return Server.lift(PushCat._.next(self,fn));
   }
-  // static public function bind<A,B,X,Y,R,E>(self:ProxySum<Closed,Noise,X,Y,R,E>,that:ProxySum<Y,X,Noise,Closed,R,E>){
-  //   return switch(self)
+  // static public function drive<A,B,X,Y,R,E>(self:ProxySum<Closed,Noise,X,Y,R,E>,that:ProxySum<X,Y,Noise,Closed,R,E>){
+  //   return switch(that){
+  //     case Yield(_,fn)  : 
+  //       drive(self,fn(Noise));
+  //     case Await(y,fn)  : 
+  //       final next = provide(self,y);
+  //       null;
+  //     case Defer(pr)    : __.belay(pr.map(drive.bind(self)));
+  //     case Ended(chk)   : __.ended(chk);
+  //   };
   // }
 }
