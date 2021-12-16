@@ -2,6 +2,7 @@ package stx.proxy.core;
 
 typedef RecureDef<B,Y,R,E>   = ProxySum<Noise,B,Noise,Y,R,E>;
 
+@:using(stx.proxy.core.Proxy.ProxyLift)
 @:forward abstract Recure<B,Y,R,E>(RecureDef<B,Y,R,E>) from RecureDef<B,Y,R,E> to RecureDef<B,Y,R,E> {
   public function new(self){
     this = self;

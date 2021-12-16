@@ -6,7 +6,7 @@ package stx;
 **/
 typedef ProxySum<A,B,X,Y,R,E>             = stx.proxy.core.Proxy.ProxySum<A,B,X,Y,R,E>;
 typedef Proxy<A,B,X,Y,R,E>                = stx.proxy.core.Proxy<A,B,X,Y,R,E>;
-
+typedef ProxyLift                         = stx.proxy.core.Proxy.ProxyLift;
 
 typedef ServerDef<X,Y,R,E>                = stx.proxy.core.Server.ServerDef<X,Y,R,E>;
 typedef Server<X,Y,R,E>                   = stx.proxy.core.Server<X,Y,R,E>;

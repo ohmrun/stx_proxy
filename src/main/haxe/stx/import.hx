@@ -9,6 +9,7 @@ using stx.Fn;
 using stx.Stream;
 using eu.ohmrun.Fletcher;
 
+import stx.fail.CoroutineFailure;
 using stx.Coroutine;
 using stx.coroutine.Core;
 
