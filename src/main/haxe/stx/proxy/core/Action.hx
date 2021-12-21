@@ -39,7 +39,7 @@ class ActionExecute<E> implements FletcherApi<Noise,Report<CoroutineFailure<E>>,
   }
   public function defer(_:Noise,cont:Terminal<Report<CoroutineFailure<E>>,Noise>):Work{
     return __.option(
-      Future.irreversible(
+      () -> Future.irreversible(
         (cb:Cycle->Void) -> {
           cb(handler(action,(report) -> cont.receive(cont.value(report))));
         }
