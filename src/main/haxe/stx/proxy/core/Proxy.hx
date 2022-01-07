@@ -45,7 +45,7 @@ class ProxyLift{
   //     }
   //   }
   // }
-  static public function flat_map<A,B,X,Y,R,O,E>(self:ProxySum<A,B,X,Y,R,E>,fn:Unary<R,Proxy<A,B,X,Y,O,E>>):Proxy<A,B,X,Y,O,E>{
+  static public function flat_map<A,B,X,Y,R,Ri,E>(self:ProxySum<A,B,X,Y,R,E>,fn:Unary<R,Proxy<A,B,X,Y,Ri,E>>):Proxy<A,B,X,Y,Ri,E>{
     var f = flat_map.bind(_,fn);
     return switch(self){
       case Await(a,arw) : Await(a,arw.then(f));

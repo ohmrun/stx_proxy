@@ -13,8 +13,8 @@ typedef RecureDef<B,Y,R,E>   = ProxySum<Noise,B,Noise,Y,R,E>;
     var c : Proxy<Closed,Noise,Noise,Y,R,E> = a(b);
     return new Producer(c);
   }
-  static public function fromTunnel<I,O,E>(self:CoroutineSum<I,O,Noise,E>):Recure<I,O,Noise,CoroutineFailure<E>>{
-    function rec(self:CoroutineSum<I,O,Noise,E>):RecureDef<I,O,Noise,CoroutineFailure<E>>{
+  static public function fromTunnel<I,O,E>(self:CoroutineSum<I,O,Noise,E>):Recure<I,O,Noise,E>{
+    function rec(self:CoroutineSum<I,O,Noise,E>):RecureDef<I,O,Noise,E>{
       return switch(self){
         case Emit(o,next) : __.yield(o,(_) -> rec(next));
         case Wait(tran)   : __.await(Noise,(b:I) -> rec(tran(b)));

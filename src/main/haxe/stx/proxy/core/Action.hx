@@ -10,8 +10,8 @@ abstract Action<E>(ActionDef<E>) from ActionDef<E> to ActionDef<E>{
   public function prj():ActionDef<E>{
     return this;
   }
-  @:from static public function fromEffect<E>(self:Effect<E>):Action<CoroutineFailure<E>>{
-    function handler(self:EffectDef<E>):ActionDef<CoroutineFailure<E>>{
+  @:from static public function fromEffect<E>(self:Effect<E>):Action<E>{
+    function handler(self:EffectDef<E>):ActionDef<E>{
       return switch(self){
         case Wait(fn)                     : Await(Closed.ZERO, (_:Noise) -> handler(fn(Noise)) );
         case Emit(head,tail)              : Await(Noise, (_:Noise) -> handler(tail));
@@ -28,25 +28,27 @@ abstract Action<E>(ActionDef<E>) from ActionDef<E> to ActionDef<E>{
   }
 }
 class ActionLift{
-  static public function toExecute<E>(self:ActionDef<E>):Execute<CoroutineFailure<E>>{
+  static public function toExecute<E>(self:ActionDef<E>):Execute<E>{
     return Execute.lift(Fletcher.fromApi(new ActionExecute(self)));
   }
 }
-class ActionExecute<E> implements FletcherApi<Noise,Report<CoroutineFailure<E>>,Noise>{
+class ActionExecute<E> implements FletcherApi<Noise,Report<E>,Noise>{
   public var action : Action<E>;
   public function new(action){
     this.action = action;
   }
-  public function defer(_:Noise,cont:Terminal<Report<CoroutineFailure<E>>,Noise>):Work{
-    return __.option(
-      () -> Future.irreversible(
-        (cb:Cycle->Void) -> {
-          cb(handler(action,(report) -> cont.receive(cont.value(report))));
-        }
+  public function defer(_:Noise,cont:Terminal<Report<E>,Noise>):Work{
+    return Work.lift(
+      __.option(
+        () -> Future.irreversible(
+          (cb:Cycle->Void) -> {
+            cb(handler(action,(report) -> cont.receive(cont.value(report))));
+          }
+        )
       )
     );
   }
-  private final function handler(self:ActionDef<Dynamic>,cont:Report<CoroutineFailure<E>>->Void):Cycle{
+  private final function handler(self:ActionDef<Dynamic>,cont:Report<E>->Void):Cycle{
     final f = handler.bind(_,cont);
     return switch(self){
       case Await(_,b)     : Future.irreversible(cb -> cb(f(b(null))));
