@@ -58,16 +58,16 @@ typedef PushCatLift                       = stx.proxy.core.PushCat.PushCatLift;
 typedef ProxyFailure                      = stx.fail.ProxyFailure;
 
 class LiftProxyCommands{
-  static public function belay<A,B,X,Y,R,E>(wildcard:Wildcard,belay:Belay<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
+  static public inline function belay<A,B,X,Y,R,E>(wildcard:Wildcard,belay:Belay<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
     return Defer(belay);
   }  
-  static public function await<A,B,X,Y,R,E>(wildcard:Wildcard,await:A,recure:B->Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
+  static public inline function await<A,B,X,Y,R,E>(wildcard:Wildcard,await:A,recure:B->Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
     return Await(await,recure);
   }
-  static public function yield<A,B,X,Y,R,E>(wildcard:Wildcard,yield:Y,recure:X->Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
+  static public inline function yield<A,B,X,Y,R,E>(wildcard:Wildcard,yield:Y,recure:X->Proxy<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
     return Yield(yield,recure);
   }
-  static public function ended<A,B,X,Y,R,E>(wildcard:Wildcard,ended:Chunk<R,E>):Proxy<A,B,X,Y,R,E>{
+  static public inline function ended<A,B,X,Y,R,E>(wildcard:Wildcard,ended:Chunk<R,E>):Proxy<A,B,X,Y,R,E>{
     return Ended(ended);
   }
 }
