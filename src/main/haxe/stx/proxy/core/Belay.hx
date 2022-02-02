@@ -6,6 +6,9 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
   public function new(self) this = self;
   static public function lift<A,B,X,Y,R,E>(self:BelayDef<A,B,X,Y,R,E>):Belay<A,B,X,Y,R,E> return new Belay(self);
   
+  @:from static public function fromFunXR<A,B,X,Y,R,E>(fn:Void -> Proxy<A,B,X,Y,R,E>):Belay<A,B,X,Y,R,E>{
+    return lazy(fn);
+  }
   @:from static public function fromThunk<A,B,X,Y,R,E>(fn:Thunk<Proxy<A,B,X,Y,R,E>>):Belay<A,B,X,Y,R,E>{
     return lazy(fn);
   }

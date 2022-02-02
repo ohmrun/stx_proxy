@@ -7,6 +7,7 @@ using stx.Pico;
 using stx.Nano;
 using stx.Fn;
 using stx.Stream;
+using stx.Assert;
 using eu.ohmrun.Fletcher;
 
 using stx.Coroutine;

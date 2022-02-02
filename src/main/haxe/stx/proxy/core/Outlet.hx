@@ -2,6 +2,7 @@ package stx.proxy.core;
 
 typedef OutletDef<R,E>     = ProxySum<Closed,Noise,Noise,Closed,R,E>;
 
+@:using(stx.proxy.core.Outlet.OutletLift)
 abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
   public function new(self) this = self;
   static public function lift<R,E>(self:OutletDef<R,E>) return new Outlet(self);
@@ -22,5 +23,34 @@ abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
   }
   @:noUsing static public function make<R,E>(self:Chunk<R,E>){
     return lift(Ended(self));
+  }
+}
+class OutletLift{
+  static public function action<R,E>(self:OutletDef<R,E>,fn:R->Void):Action<E>{
+    __.assert().exists(self);
+    function f(self:OutletDef<R,E>){
+      return switch(self){
+        case Await(_,await) : f(await(Noise));
+        case Yield(y,yield) : f(yield(Noise));
+        case Defer(belay)   : __.belay(belay.mod(f));
+        case Ended(Val(r))  : 
+          fn(r);
+          __.ended(Tap);
+        case Ended(End(x))  : Ended(End(x));
+        case Ended(Tap)     : Ended(Tap);
+        case null           : Ended(__.fault().explain(_ -> _.e_undefined()));
+      }
+    }
+    return Action.lift(f(self));
+  }
+  static public function pledge<R,E>(self:OutletDef<R,E>):Pledge<R,E>{
+    final source  = Pledge.trigger();
+    final action  = action(self,(r) -> source.trigger(__.accept(r)));
+    final execute = action.toExecute();
+          execute.environment(
+            ()  -> {},
+            (e) -> source.trigger(__.reject(e))
+          ).submit();
+    return source.toPledge();
   }
 }

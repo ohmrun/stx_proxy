@@ -57,6 +57,7 @@ typedef PushCatLift                       = stx.proxy.core.PushCat.PushCatLift;
 
 typedef ProxyFailure                      = stx.fail.ProxyFailure;
 
+typedef LiftEndedFromHalt                 = stx.proxy.lift.LiftEndedFromHalt;
 class LiftProxyCommands{
   static public inline function belay<A,B,X,Y,R,E>(wildcard:Wildcard,belay:Belay<A,B,X,Y,R,E>):Proxy<A,B,X,Y,R,E>{
     return Defer(belay);
