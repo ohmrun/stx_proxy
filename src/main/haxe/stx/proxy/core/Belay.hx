@@ -4,7 +4,7 @@ typedef BelayDef<A,B,X,Y,R,E> = ProvideDef<Proxy<A,B,X,Y,R,E>>;
 
 abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to BelayDef<A,B,X,Y,R,E>{
   public function new(self) this = self;
-  static public function lift<A,B,X,Y,R,E>(self:BelayDef<A,B,X,Y,R,E>):Belay<A,B,X,Y,R,E> return new Belay(self);
+  @:noUsing static public function lift<A,B,X,Y,R,E>(self:BelayDef<A,B,X,Y,R,E>):Belay<A,B,X,Y,R,E> return new Belay(self);
   
   @:from static public function fromFunXR<A,B,X,Y,R,E>(fn:Void -> Proxy<A,B,X,Y,R,E>):Belay<A,B,X,Y,R,E>{
     return lazy(fn);

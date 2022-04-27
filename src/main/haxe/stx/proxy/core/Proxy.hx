@@ -66,7 +66,7 @@ class ProxyLift{
       case Defer(ft)    : __.belay(ft.mod(map.bind(_,fn)));
     }
   }
-  static public function errata<A,B,X,Y,R,E,EE>(self:ProxySum<A,B,X,Y,R,E>,fn:Rejection<E>->Rejection<EE>):Proxy<A,B,X,Y,R,EE>{
+  static public function errata<A,B,X,Y,R,E,EE>(self:ProxySum<A,B,X,Y,R,E>,fn:Refuse<E>->Refuse<EE>):Proxy<A,B,X,Y,R,EE>{
     return switch (self) {
       case Ended(res)   : Ended(res.errata(fn));
       case Await(a,arw) : Await(a,arw.then(errata.bind(_,fn)));

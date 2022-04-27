@@ -5,7 +5,7 @@ typedef ActionDef<E>     = ProxySum<Closed,Noise,Noise,Closed,Noise,E>;
 @:using(stx.proxy.core.Action.ActionLift)
 abstract Action<E>(ActionDef<E>) from ActionDef<E> to ActionDef<E>{
   public function new(self) this = self;
-  static public function lift<E>(self:ActionDef<E>) return new Action(self);
+  @:noUsing static public function lift<E>(self:ActionDef<E>) return new Action(self);
   
   public function prj():ActionDef<E>{
     return this;
@@ -32,20 +32,19 @@ class ActionLift{
     return Execute.lift(Fletcher.fromApi(new ActionExecute(self)));
   }
 }
-class ActionExecute<E> implements FletcherApi<Noise,Report<E>,Noise>{
+class ActionExecute<E> extends FletcherCls<Noise,Report<E>,Noise>{
   public var action : Action<E>;
   public function new(action){
+    super();
     this.action = action;
   }
   public function defer(_:Noise,cont:Terminal<Report<E>,Noise>):Work{
     return Work.lift(
-      __.option(
-        () -> Future.irreversible(
-          (cb:Cycle->Void) -> {
-            cb(handler(action,(report) -> cont.receive(cont.value(report))));
-          }
-        )
-      )
+      Cycler.pure(Future.irreversible(
+        (cb:Cycle->Void) -> {
+          cb(handler(action,(report) -> cont.receive(cont.value(report))));
+        }
+      ))
     );
   }
   private final function handler(self:ActionDef<Dynamic>,cont:Report<E>->Void):Cycle{

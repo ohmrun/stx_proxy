@@ -6,7 +6,7 @@ typedef ClientDef<A,B,R,E>  = ProxySum<A,B,Noise,Closed,R,E>;
 abstract Client<A,B,R,E>(ClientDef<A,B,R,E>) from ClientDef<A,B,R,E> to ClientDef<A,B,R,E>{
   static public var _(default,never) = ClientLift;
   public function new(self) this = self;
-  static public function lift<A,B,R,E>(self:ClientDef<A,B,R,E>):Client<A,B,R,E> return new Client(self);
+  @:noUsing static public function lift<A,B,R,E>(self:ClientDef<A,B,R,E>):Client<A,B,R,E> return new Client(self);
   
 
   public function prj():ClientDef<A,B,R,E> return this;

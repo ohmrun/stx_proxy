@@ -4,7 +4,7 @@ typedef AccessDef<Y,E> = ProducerDef<Y,Noise,E>;
 
 abstract Access<Y,E>(AccessDef<Y,E>) from AccessDef<Y,E> to AccessDef<Y,E>{
   public function new(self) this = self;
-  static public function lift<Y,E>(self:AccessDef<Y,E>):Access<Y,E> return new Access(self);
+  @:noUsing static public function lift<Y,E>(self:AccessDef<Y,E>):Access<Y,E> return new Access(self);
   
 
 
