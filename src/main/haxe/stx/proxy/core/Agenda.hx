@@ -1,17 +1,17 @@
 package stx.proxy.core;
 
-typedef ActionDef<E>     = ProxySum<Closed,Noise,Noise,Closed,Noise,E>;
+typedef AgendaDef<E>     = ProxySum<Closed,Noise,Noise,Closed,Noise,E>;
 
-@:using(stx.proxy.core.Action.ActionLift)
-abstract Action<E>(ActionDef<E>) from ActionDef<E> to ActionDef<E>{
+@:using(stx.proxy.core.Agenda.AgendaLift)
+abstract Agenda<E>(AgendaDef<E>) from AgendaDef<E> to AgendaDef<E>{
   public function new(self) this = self;
-  @:noUsing static public function lift<E>(self:ActionDef<E>) return new Action(self);
+  @:noUsing static public function lift<E>(self:AgendaDef<E>) return new Agenda(self);
   
-  public function prj():ActionDef<E>{
+  public function prj():AgendaDef<E>{
     return this;
   }
-  @:from static public function fromEffect<E>(self:Effect<E>):Action<E>{
-    function handler(self:EffectDef<E>):ActionDef<E>{
+  @:from static public function fromEffect<E>(self:Effect<E>):Agenda<E>{
+    function handler(self:EffectDef<E>):AgendaDef<E>{
       return switch(self){
         case Wait(fn)                     : Await(Closed.ZERO, (_:Noise) -> handler(fn(Noise)) );
         case Emit(head,tail)              : Await(Noise, (_:Noise) -> handler(tail));
@@ -26,14 +26,21 @@ abstract Action<E>(ActionDef<E>) from ActionDef<E> to ActionDef<E>{
   @:to public function toProxy():Proxy<Closed,Noise,Noise,Closed,Noise,E>{
     return this;
   }
-}
-class ActionLift{
-  static public function toExecute<E>(self:ActionDef<E>):Execute<E>{
-    return Execute.lift(Fletcher.fromApi(new ActionExecute(self)));
+  public var error(get,never):Report<E>;
+  public function get_error():Report<E>{
+    return switch(this){
+      case Ended(End(e)) if(e!=null)  : __.report(f -> e);
+      default                         : __.report();
+    }
   }
 }
-class ActionExecute<E> extends FletcherCls<Noise,Report<E>,Noise>{
-  public var action : Action<E>;
+class AgendaLift{
+  static public function toExecute<E>(self:AgendaDef<E>):Execute<E>{
+    return Execute.lift(Fletcher.fromApi(new AgendaExecute(self)));
+  }
+}
+class AgendaExecute<E> extends FletcherCls<Noise,Report<E>,Noise>{
+  public var action : Agenda<E>;
   public function new(action){
     super();
     this.action = action;
@@ -47,7 +54,7 @@ class ActionExecute<E> extends FletcherCls<Noise,Report<E>,Noise>{
       ))
     );
   }
-  private final function handler(self:ActionDef<Dynamic>,cont:Report<E>->Void):Cycle{
+  private final function handler(self:AgendaDef<Dynamic>,cont:Report<E>->Void):Cycle{
     final f = handler.bind(_,cont);
     return switch(self){
       case Await(_,b)     : Future.irreversible(cb -> cb(f(b(null))));

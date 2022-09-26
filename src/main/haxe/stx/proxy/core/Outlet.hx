@@ -26,7 +26,7 @@ abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
   }
 }
 class OutletLift{
-  static public function action<R,E>(self:OutletDef<R,E>,fn:R->Void):Action<E>{
+  static public function agenda<R,E>(self:OutletDef<R,E>,fn:R->Void):Agenda<E>{
     __.assert().exists(self);
     function f(self:OutletDef<R,E>){
       return switch(self){
@@ -41,12 +41,12 @@ class OutletLift{
         case null           : Ended(__.fault().explain(_ -> _.e_undefined()));
       }
     }
-    return Action.lift(f(self));
+    return Agenda.lift(f(self));
   }
   static public function pledge<R,E>(self:OutletDef<R,E>):Pledge<R,E>{
     final source  = Pledge.trigger();
-    final action  = action(self,(r) -> source.trigger(__.accept(r)));
-    final execute = action.toExecute();
+    final Agenda  = agenda(self,(r) -> source.trigger(__.accept(r)));
+    final execute = Agenda.toExecute();
           execute.environment(
             ()  -> {},
             (e) -> source.trigger(__.reject(e))

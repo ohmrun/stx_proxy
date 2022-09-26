@@ -19,7 +19,15 @@ abstract Push<A,B,X,Y,R,E>(ProxySum<A,B,X,Y,R,E>) from ProxySum<A,B,X,Y,R,E> to 
       ))
     );
   }  
-
+  @:noUsing static public function fromCluster<A,B,X,Y,R,E>(self:Cluster<B>):Proxy<A,B,A,B,R,E>{
+    return self.head().fold(
+      ok -> __.yield(
+        ok,
+        (a:A) -> __.await(a,(_) -> fromCluster(self.tail()))
+      ),
+      ()    -> __.ended(Tap)
+    );
+  }
   @:to public function toProxy():Proxy<A,B,X,Y,R,E>{
     return this;
   }

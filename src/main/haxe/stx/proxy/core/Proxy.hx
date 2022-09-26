@@ -1,6 +1,5 @@
 package stx.proxy.core;
 
-
 enum ProxySum<A,B,X,Y,R,E>{
   Await(a:A,arw:Unary<B,Proxy<A,B,X,Y,R,E>>);
   Yield(y:Y,arw:Unary<X,Proxy<A,B,X,Y,R,E>>);
@@ -29,6 +28,13 @@ enum ProxySum<A,B,X,Y,R,E>{
   // @:noUsing static public function respond<A,B,X,Y,E>(y:Y):Proxy<A,B,X,Y,X,E>{
   //   return Respond.pure(y);
   // }
+  public var error(get,never):Report<E>;
+  public function get_error():Report<E>{
+    return switch(this){
+      case Ended(End(e)) if(e!=null)  : __.report(f -> e);
+      default                         : __.report();
+    }
+  }
 }
 class ProxyLift{ 
   //static public function fold<A,B,X,Y,R,E,Z>(self:Proxy<A,B,X,Y,R,E,Z>,await:A->(B->Proxy<A,B,X>)

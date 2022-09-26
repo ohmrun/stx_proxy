@@ -3,7 +3,8 @@ package stx.proxy.core;
 typedef ServerDef<X,Y,R,E> = ProxySum<Closed,Noise,X,Y,R,E>;
 
 @:using(stx.proxy.core.Server.ServerLift)
-@:forward abstract Server<X,Y,R,E>(ServerDef<X,Y,R,E>) from ServerDef<X,Y,R,E> to ServerDef<X,Y,R,E>{
+@:forward
+@:transitive abstract Server<X,Y,R,E>(ServerDef<X,Y,R,E>) from ServerDef<X,Y,R,E> to ServerDef<X,Y,R,E>{
   static public var _(default,never) = ServerLift;
   public function new(v:ServerDef<X,Y,R,E>){
     this = v;
@@ -39,6 +40,9 @@ class ServerLift{
   }
   static public function next<X,Y,C,D,R,E>(self:ProxySum<Closed,Noise,X,Y,R,E>,fn:Unary<Y,Proxy<X,Y,C,D,R,E>>):Server<C,D,R,E>{
     return Server.lift(PushCat._.next(self,fn));
+  }
+  static public function connect<X,Y,C,D,R,E>(self:ProxySum<Closed,Noise,X,Y,R,E>,fn:Unary<Y,ProxySum<X,Y,Noise,Closed,R,E>>):Outlet<R,E>{
+    return Outlet.lift(next(self,fn));
   }
   // static public function drive<A,B,X,Y,R,E>(self:ProxySum<Closed,Noise,X,Y,R,E>,that:ProxySum<X,Y,Noise,Closed,R,E>){
   //   return switch(that){

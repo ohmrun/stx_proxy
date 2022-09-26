@@ -2,7 +2,10 @@
   "build" : {
     "-D"    : ["no-deprecation-warnings","stx.log.null"],
     "-cp"   : ["src/main/haxe"],
-    "-lib"  : ["tink_priority","tink_core","stx_pico","stx_nano","stx_fn","stx_ds","stx_assert","stx_parse","stx_asys","stx_fp","stx_log","stx_test"],
+    "-lib"  : [
+      "tink_priority","tink_core",
+      "stx_pico","stx_nano","stx_fn","stx_ds","stx_assert","stx_parse","stx_asys","stx_fp","stx_log","stx_test","stx_fail"
+    ],
     "unit"  : {
       "--macro" : [
         "include('stx.Proxy',true)",
