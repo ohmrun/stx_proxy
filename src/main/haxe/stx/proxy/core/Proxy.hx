@@ -91,4 +91,18 @@ class ProxyLift{
       case Defer(self)   : __.belay(self.mod(reflect));
     }
   }
+  static public function adjust<A,B,X,Y,R,Ri,E>(self:ProxySum<A,B,X,Y,R,E>,fn:R->Res<Ri,E>):Proxy<A,B,X,Y,Ri,E>{
+    final f = adjust.bind(_,fn);
+    return switch(self) {
+      case Await(a,arw)       : __.await(a,arw.then(f));
+      case Yield(a,arw)       : __.yield(a,arw.then(f));
+      case Ended(Val(r))      : switch(fn(r)){
+        case Accept(ok) : __.ended(Val(ok));
+        case Reject(no) : __.ended(End(no));
+      }
+      case Ended(Tap)         : __.ended(Tap);
+      case Ended(End(e))      : __.ended(End(e));
+      case Defer(self)        : __.belay(self.mod(f));
+    }
+  }
 }
