@@ -73,7 +73,7 @@ private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
     }
   }
   public function get_value()  : Null<Future<Cycle>>{
-    final c = (x) -> new AgendaCyclerCls(Agenda.lift(x),report);
+    final c = (x) -> new AgendaCyclerCls(Agenda.lift(x),report).toCyclerApi();
     return switch(action){
       case Await(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
       case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
@@ -85,11 +85,24 @@ private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
       case Ended(Val(_))    : null;
       case Defer(ft)        : Future.irreversible(
         (cb:Cycle->Void) -> {
-          ft.prj().environment(
+          var next_agenda = null;
+          final set_next_agenda = (x) -> {
+            next_agenda = x;
+          }
+          final lhs = ft.prj().environment(
             Noise,
-            (agenda)  -> cb(c(agenda)),
+            (agenda)  -> set_next_agenda(c(agenda)),
             (e)       -> __.raise(e)            
-          ).submit();
+          ).cycle();
+          final rhs = Cycle.anon(
+            () -> {
+              return __.option(next_agenda).fold(
+                ok -> Future.irreversible(cb -> cb(ok)),
+                () -> null
+              );
+            }
+          );
+          cb(lhs.seq(rhs));
         }
       );
     }
