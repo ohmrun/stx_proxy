@@ -60,11 +60,14 @@ class AgendaExecute<E> extends FletcherCls<Noise,Report<E>,Noise>{
   }
 }
 private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
+  public var done : Bool;
+
   public final report : Report<E> -> Void;
   public var   action : Agenda<E>;
   public function new(action,report){
     this.action = action;
     this.report = report;
+    this.done   = false;
   }
   public function get_state()  : CycleState{
     return switch(action){
@@ -73,38 +76,41 @@ private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
     }
   }
   public function get_value()  : Null<Future<Cycle>>{
-    final c = (x) -> new AgendaCyclerCls(Agenda.lift(x),report).toCyclerApi();
-    return switch(action){
-      case Await(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
-      case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
-      case Ended(End(null)) : null;
-      case Ended(End(e))    : 
-        report(__.report(f -> e));
-        null;
-      case Ended(Tap)       : null;
-      case Ended(Val(_))    : null;
-      case Defer(ft)        : Future.irreversible(
-        (cb:Cycle->Void) -> {
-          var next_agenda = null;
-          final set_next_agenda = (x) -> {
-            next_agenda = x;
-          }
-          final lhs = ft.prj().environment(
-            Noise,
-            (agenda)  -> set_next_agenda(c(agenda)),
-            (e)       -> __.raise(e)            
-          ).cycle();
-          final rhs = Cycle.anon(
-            () -> {
-              return __.option(next_agenda).fold(
-                ok -> Future.irreversible(cb -> cb(ok)),
-                () -> null
-              );
+    if(value == null){
+      final c = (x) -> new AgendaCyclerCls(Agenda.lift(x),report).toCyclerApi();
+      value =  switch(action){
+        case Await(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
+        case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
+        case Ended(End(null)) : null;
+        case Ended(End(e))    : 
+          report(__.report(f -> e));
+          null;
+        case Ended(Tap)       : null;
+        case Ended(Val(_))    : null;
+        case Defer(ft)        : Future.irreversible(
+          (cb:Cycle->Void) -> {
+            var next_agenda = null;
+            final set_next_agenda = (x) -> {
+              next_agenda = x;
             }
-          );
-          cb(lhs.seq(rhs));
-        }
-      );
+            final lhs = ft.prj().environment(
+              Noise,
+              (agenda)  -> set_next_agenda(c(agenda)),
+              (e)       -> __.raise(e)            
+            ).cycle();
+            final rhs = Cycle.anon(
+              () -> {
+                return __.option(next_agenda).fold(
+                  ok -> Future.irreversible(cb -> cb(ok)),
+                  () -> null
+                );
+              }
+            );
+            cb(lhs.seq(rhs));
+          }
+        );
+      }
+      return value;
     }
   }
 }
