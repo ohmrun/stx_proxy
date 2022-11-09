@@ -46,39 +46,52 @@ class AgendaExecute<E> extends FletcherCls<Noise,Report<E>,Noise>{
     this.action = action;
   }
   public function defer(_:Noise,cont:Terminal<Report<E>,Noise>):Work{
-    return Work.lift(
-      Cycler.pure(Future.irreversible(
-        (cb:Cycle->Void) -> {
-          cb(handler(action,(report) -> cont.receive(cont.value(report))));
-        }
-      ))
+    var error     = __.report();
+    final report  = (x:Report<E>) -> {
+      error = x;
+    }
+    return Work.fromCycle(
+      new AgendaCyclerCls(action,report)
+    ).seq(
+      Cycle.anon(() -> {
+        return Future.lazy(cont.receive(cont.value(error)));
+      })
     );
   }
-  private final function handler(self:AgendaDef<Dynamic>,cont:Report<E>->Void):Cycle{
-    final f = handler.bind(_,cont);
-    return switch(self){
-      case Await(_,b)     : Future.irreversible(cb -> cb(f(b(null))));
-      case Yield(_,x)     : Future.irreversible(cb -> cb(f(x(null))));
-      case Defer(held)    : 
-        final provide : Provide<Cycle>  = Provide.lift(held.map(f));
-        provide.then(
-          Fletcher.Anon(
-            (inpt:Cycle,cont:Terminal<Noise,Noise>) -> {
-              return Work.fromCycle(inpt).seq(cont.receive(cont.value(Noise)));
-            }
-          )
-        ).environment(
-          (noise:Noise) -> {}
-        ).cycle();
-      case Ended(Val(_))                : 
-        cont(__.report());
-        Cycle.unit();
-      case Ended(Tap)                   :   
-        cont(__.report());
-        Cycle.unit();
-      case Ended(End(x))                : 
-        cont(__.report(_ -> x));
-        Cycle.unit();
+}
+private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
+  public final report : Report<E> -> Void;
+  public var   action : Agenda<E>;
+  public function new(action,report){
+    this.action = action;
+    this.report = report;
+  }
+  public function get_state()  : CycleState{
+    return switch(action){
+      case Ended(_) : CYCLE_NEXT;
+      default       : CYCLE_STOP;
+    }
+  }
+  public function get_value()  : Null<Future<Cycle>>{
+    final c = (x) -> new AgendaCyclerCls(Agenda.lift(x),report);
+    return switch(action){
+      case Await(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
+      case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
+      case Ended(End(null)) : null;
+      case Ended(End(e))    : 
+        report(__.report(f -> e));
+        null;
+      case Ended(Tap)       : null;
+      case Ended(Val(_))    : null;
+      case Defer(ft)        : Future.irreversible(
+        (cb:Cycle->Void) -> {
+          ft.prj().environment(
+            Noise,
+            (agenda)  -> cb(c(agenda)),
+            (e)       -> __.raise(e)            
+          ).submit();
+        }
+      );
     }
   }
 }

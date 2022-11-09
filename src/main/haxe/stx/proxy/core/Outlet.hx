@@ -9,7 +9,7 @@ abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
   
   public function flat_map<O>(fn:Unary<R,Outlet<O,E>>):Outlet<O,E>{
     return lift(
-      Proxy._.flat_map(
+      ProxyLift.flat_map(
         this,
         fn.then((x:Outlet<O,E>)->x.prj())
       )
@@ -28,11 +28,15 @@ abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
 class OutletLift{
   static public function agenda<R,E>(self:OutletDef<R,E>,fn:R->Void):Agenda<E>{
     __.assert().exists(self);
+    __.log().debug('agenda start: $self');
     function f(self:OutletDef<R,E>){
+      __.log().debug('agenda: $self');
       return switch(self){
         case Await(_,await) : f(await(Noise));
         case Yield(y,yield) : f(yield(Noise));
-        case Defer(belay)   : __.belay(belay.mod(f));
+        case Defer(belay)   : 
+          trace(belay);
+          __.belay(belay.mod((x) -> { trace(x); return f(x); }));
         case Ended(Val(r))  : 
           fn(r);
           __.ended(Tap);

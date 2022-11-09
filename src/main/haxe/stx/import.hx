@@ -1,6 +1,7 @@
 package stx.proxy;
 
 
+
 using tink.CoreApi;
 
 using stx.Pico;
@@ -10,6 +11,8 @@ using stx.Fn;
 using stx.Stream;
 using stx.Assert;
 using eu.ohmrun.Fletcher;
+using stx.Log;
+using stx.proxy.Logging;
 
 using stx.Coroutine;
 using stx.coroutine.Core;
