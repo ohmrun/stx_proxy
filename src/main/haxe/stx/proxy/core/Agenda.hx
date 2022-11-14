@@ -1,5 +1,9 @@
 package stx.proxy.core;
 
+using stx.Stream;
+using stx.stream.Cycle;
+using stx.stream.Work;
+
 typedef AgendaDef<E>     = ProxySum<Closed,Noise,Noise,Closed,Noise,E>;
 
 @:using(stx.proxy.core.Agenda.AgendaLift)
@@ -50,35 +54,58 @@ class AgendaExecute<E> extends FletcherCls<Noise,Report<E>,Noise>{
     final report  = (x:Report<E>) -> {
       error = x;
     }
+    final lhs = new AgendaCyclerCls(action,report);
+    final rhs = Cycle.anon(() -> {
+      __.log().trace('calling: $error');
+      return Future.irreversible(
+        (cb) -> {
+          __.log().trace('called');
+          final conted    = cont.value(error);
+          final received  = cont.receive(conted);     
+          cb(received);
+        }
+      );
+    });
     return Work.fromCycle(
-      new AgendaCyclerCls(action,report)
-    ).seq(
-      Cycle.anon(() -> {
-        return Future.lazy(cont.receive(cont.value(error)));
-      })
+      lhs.seq(rhs)
     );
   }
 }
-private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
-  public var done : Bool;
-
+private class AgendaCyclerCls<E> implements stx.stream.Cycle.CyclerApi{
+  public var done     : Bool;
+  public final uuid   : String;
   public final report : Report<E> -> Void;
   public var   action : Agenda<E>;
-  public function new(action,report){
-    this.action = action;
-    this.report = report;
-    this.done   = false;
+  public var working  : Bool;
+  public final pos    : Position;
+
+  public function new(action:Agenda<E>,report,?pos:Pos){
+    this.pos        = pos;
+    this.action     = action;
+    this.report     = report;
+    this.done       = false;
+    this.uuid       = __.uuid("xxxxx");
+    this.working    = false;
+    __.log().trace('next agenda: $action ${this.pos}');
   }
-  public function get_state()  : CycleState{
+  public var state(get,null)    : CycleState;
+  public function get_state()   : CycleState{
     return switch(action){
-      case Ended(_) : CYCLE_NEXT;
-      default       : CYCLE_STOP;
+      case Ended(_) : CYCLE_STOP;
+      default       : CYCLE_NEXT;
     }
   }
+  @:isVar public var value(get,null)          : Null<Future<Cycle>>;
   public function get_value()  : Null<Future<Cycle>>{
-    if(value == null){
-      final c = (x) -> new AgendaCyclerCls(Agenda.lift(x),report).toCyclerApi();
-      value =  switch(action){
+    __.log().trace('$uuid: ${this.value} ${this.pos}');
+    if(this.value == null && !this.working){
+      this.working = true;
+      __.log().debug('$action');
+      final c = (x) -> {
+        __.log().trace('constructor');
+        return new AgendaCyclerCls(Agenda.lift(x),report).toCyclerApi();
+      }
+      this.value = (switch(action){
         case Await(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
         case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
         case Ended(End(null)) : null;
@@ -89,8 +116,10 @@ private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
         case Ended(Val(_))    : null;
         case Defer(ft)        : Future.irreversible(
           (cb:Cycle->Void) -> {
+            __.log().trace('call cycle');
             var next_agenda = null;
             final set_next_agenda = (x) -> {
+              __.log().trace('set next agenda');
               next_agenda = x;
             }
             final lhs = ft.prj().environment(
@@ -98,6 +127,7 @@ private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
               (agenda)  -> set_next_agenda(c(agenda)),
               (e)       -> __.raise(e)            
             ).cycle();
+
             final rhs = Cycle.anon(
               () -> {
                 return __.option(next_agenda).fold(
@@ -109,8 +139,16 @@ private class AgendaCyclerCls<E> extends stx.stream.Cycle.CyclerCls{
             cb(lhs.seq(rhs));
           }
         );
-      }
-      return value;
+      });
     }
+    return this.value;
+  }
+  public inline function toString(){
+    final type  = __.definition(this).identifier();
+    final val   = get_value();
+    return '$type[$uuid]($state:$val:$pos)';
+  } 
+  public function toCyclerApi():CyclerApi{
+    return this;
   }
 }

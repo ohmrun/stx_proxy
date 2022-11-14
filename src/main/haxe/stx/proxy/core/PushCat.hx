@@ -45,6 +45,7 @@ class PushCatLift{
   */
   //(>>~)
   static public function next<A,B,C,D,X,Y,R,E>(prx0:Proxy<A,B,X,Y,R,E>,prx1:Unary<Y,Proxy<X,Y,C,D,R,E>>):Proxy<A,B,C,D,R,E>{
+    __.log().trace('next $prx0 $prx1');
     return switch(prx0){
       case Ended(res)   : Ended(res);
       case Yield(y,arw) : __.belay(prx1.then(PullCat._.next.bind(arw)).bindI(y));

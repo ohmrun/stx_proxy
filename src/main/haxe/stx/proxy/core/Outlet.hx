@@ -28,15 +28,21 @@ abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
 class OutletLift{
   static public function agenda<R,E>(self:OutletDef<R,E>,fn:R->Void):Agenda<E>{
     __.assert().exists(self);
-    __.log().debug('agenda start: $self');
-    function f(self:OutletDef<R,E>){
-      __.log().debug('agenda: $self');
-      return switch(self){
+    __.log().debug('outlet agenda: $self');
+    function f(me:OutletDef<R,E>){
+      __.log().debug('outlet: $self');
+      return switch(me){
         case Await(_,await) : f(await(Noise));
-        case Yield(y,yield) : f(yield(Noise));
+        case Yield(_,yield) : f(yield(Noise));
         case Defer(belay)   : 
-          trace(belay);
-          __.belay(belay.mod((x) -> { trace(x); return f(x); }));
+          __.log().trace('outlet belay $belay');
+          __.belay(
+            belay.mod(
+              (x) -> { 
+                return f(x); 
+              }
+            )
+          );
         case Ended(Val(r))  : 
           fn(r);
           __.ended(Tap);
