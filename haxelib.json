@@ -14,19 +14,19 @@
     "version": "0.1.0",
     "url": "https://github.com/0b1kn00b/",
     "dependencies": {
-        "tink_core"     : "git:https://github.com/haxetink/tink_core.git",
+        "tink_core"     : "",
 
-        "stx_pico"      : "git:https://github.com/ohmrun/stx_pico.git",
-        "stx_fail"      : "git:https://github.com/ohmrun/stx_fail.git",
-        "stx_nano"      : "git:https://github.com/ohmrun/stx_nano.git",
-        "stx_fn"        : "git:https://github.com/ohmrun/stx_fn.git",
-        "stx_log"       : "git:https://github.com/ohmrun/stx_log.git",
+        "stx_pico"      : "",
+        "stx_fail"      : "",
+        "stx_nano"      : "",
+        "stx_fn"        : "",
+        "stx_log"       : "",
 
-        "stx_ds"        : "git:https://github.com/ohmrun/stx_ds.git",
+        "stx_ds"        : "",
 
-        "stx_coroutine" : "git:https://github.com/ohmrun/stx_coroutine.git",
+        "stx_coroutine" : "",
 
-        "fletcher"      : "git:https://github.com/ohmrun/fletcher.git"
+        "fletcher"      : ""
     },
     "classPath": "src/main/haxe"
 }
