@@ -12,7 +12,7 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
   @:from static public function fromThunk<A,B,X,Y,R,E>(fn:Thunk<Proxy<A,B,X,Y,R,E>>):Belay<A,B,X,Y,R,E>{
     return lazy(fn);
   }
-  @:from static public function fromFuture<A,B,X,Y,R,E>(fn:Thunk<Future<Proxy<A,B,X,Y,R,E>>>,?pos:Pos):Belay<A,B,X,Y,R,E>{
+  @:from static public function fromFuture<A,B,X,Y,R,E>(fn:Thunk<Future<Proxy<A,B,X,Y,R,E>>>):Belay<A,B,X,Y,R,E>{
     return lift(Provide.fromFunXFuture(
       () -> {
         return fn();
