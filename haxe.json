@@ -4,7 +4,7 @@
     "-cp"   : ["src/main/haxe"],
     "-lib"  : [
       "tink_priority","tink_core",
-      "stx_pico","stx_nano","stx_fn","stx_ds","stx_assert","stx_parse","stx_asys","stx_fp","stx_log","stx_test","stx_fail"
+      "stx_pico","stx_nano","stx_fn","stx_ds","stx_assert","stx_parse","stx_asys","stx_fp","stx_log","stx_fail"
     ],
     "unit"  : {
       "--macro" : [
@@ -20,8 +20,12 @@
       "interp"  : {
         "--interp"  : true
       }
+    },
+    "test" : {
+      "-cp" : "src/test/haxe",
+      "-L" : ["stx_test"]
     }
-  },
+  }, 
   "run" : {
 
   }
