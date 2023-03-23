@@ -1,8 +1,10 @@
 package stx;
 
+import tink.core.Noise;
+using stx.Nano;
 //Drain
 /**
-  Gabriel Gonzalez' "Haskell Pipes"
+  Gabriella Gonzalez' "Haskell Pipes"
 **/
 typedef ProxySum<A,B,X,Y,R,E>             = stx.proxy.core.Proxy.ProxySum<A,B,X,Y,R,E>;
 typedef Proxy<A,B,X,Y,R,E>                = stx.proxy.core.Proxy<A,B,X,Y,R,E>;
