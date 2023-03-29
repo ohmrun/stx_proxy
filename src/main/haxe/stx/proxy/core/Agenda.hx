@@ -86,7 +86,7 @@ private class AgendaCyclerCls<E> implements stx.stream.Cycle.CyclerApi{
     this.done       = false;
     this.uuid       = __.uuid("xxxxx");
     this.working    = false;
-    __.log().trace('next agenda: $action ${this.pos}');
+    __.log().trace('next agenda: ${this.uuid} $action ${this.pos}');
   }
   public var state(get,null)    : CycleState;
   public function get_state()   : CycleState{
@@ -110,6 +110,7 @@ private class AgendaCyclerCls<E> implements stx.stream.Cycle.CyclerApi{
         case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
         case Ended(End(null)) : null;
         case Ended(End(e))    : 
+          __.log().debug('ready to report $e');
           report(__.report(f -> e));
           null;
         case Ended(Tap)       : null;
