@@ -35,7 +35,7 @@ class OutletLift{
         case Await(_,await) : f(await(Noise));
         case Yield(_,yield) : f(yield(Noise));
         case Defer(belay)   : 
-          __.log().trace('outlet belay $belay');
+          __.log().trace(_ -> _.thunk(() -> 'outlet belay $belay'));
           __.belay(
             belay.mod(
               (x) -> { 
