@@ -23,6 +23,9 @@ abstract Agenda<E>(AgendaDef<E>) from AgendaDef<E> to AgendaDef<E>{
   public function prj():AgendaDef<E>{
     return this;
   }
+  @:from static public function fromRefuse<E>(self:Refuse<E>):Agenda<E>{
+    return Ended(End(self));
+  }
   @:from static public function fromEffect<E>(self:Effect<E>):Agenda<E>{
     function handler(self:EffectDef<E>):AgendaDef<E>{
       return switch(self){
