@@ -4,8 +4,17 @@ using stx.Stream;
 using stx.stream.Cycle;
 using stx.stream.Work;
 
+/**
+ * Def for `stx.proxy.core.Agenda`
+ */
 typedef AgendaDef<E>     = ProxySum<Closed,Noise,Noise,Closed,Noise,E>;
 
+/**
+ * Represents a sequence of closed over function calls, possibly yielding
+ * an error.
+ * 
+ * Analogous to `stx.coroutine.Effect`
+ */
 @:using(stx.proxy.core.Agenda.AgendaLift)
 abstract Agenda<E>(AgendaDef<E>) from AgendaDef<E> to AgendaDef<E>{
   public function new(self) this = self;
