@@ -1,9 +1,24 @@
 package stx.proxy.core;
 
+/**
+ * Represents two intercommunicating Coroutines bundled together.
+ */
 enum ProxySum<A,B,X,Y,R,E>{
+  /**
+   * Upstream Coroutine.
+   */
   Await(a:A,arw:Unary<B,Proxy<A,B,X,Y,R,E>>);
+  /**
+   * Downstream Coroutine.
+   */
   Yield(y:Y,arw:Unary<X,Proxy<A,B,X,Y,R,E>>);
+  /**
+   * Indicates an unready resource
+   */
   Defer(ft:Belay<A,B,X,Y,R,E>);
+  /**
+   * Completion with a value or an error.
+   */
   Ended(res:Chunk<R,E>);
 }
 
