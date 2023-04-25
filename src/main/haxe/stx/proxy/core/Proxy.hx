@@ -106,7 +106,7 @@ class ProxyLift{
       case Defer(self)   : __.belay(self.mod(reflect));
     }
   }
-  static public function adjust<A,B,X,Y,R,Ri,E>(self:ProxySum<A,B,X,Y,R,E>,fn:R->Res<Ri,E>):Proxy<A,B,X,Y,Ri,E>{
+  static public function adjust<A,B,X,Y,R,Ri,E>(self:ProxySum<A,B,X,Y,R,E>,fn:R->Upshot<Ri,E>):Proxy<A,B,X,Y,Ri,E>{
     final f = adjust.bind(_,fn);
     return switch(self) {
       case Await(a,arw)       : __.await(a,arw.then(f));

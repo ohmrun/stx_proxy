@@ -138,7 +138,7 @@ private class AgendaCyclerCls<E> implements stx.stream.Cycle.CyclerApi{
             final lhs = ft.prj().environment(
               Noise,
               (agenda)  -> set_next_agenda(c(agenda)),
-              (e)       -> __.raise(e)            
+              (e)       -> __.crack(e)            
             ).cycle();
 
             final rhs = Cycle.anon(
