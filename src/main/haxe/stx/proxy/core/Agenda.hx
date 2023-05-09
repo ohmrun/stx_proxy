@@ -118,8 +118,8 @@ private class AgendaCyclerCls<E> implements stx.stream.Cycle.CyclerApi{
         return new AgendaCyclerCls(Agenda.lift(x),report).toCyclerApi();
       }
       this.value = (switch(action){
-        case Await(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
-        case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(null)).toCyclerApi()));
+        case Await(_, arw)    : Future.irreversible((cb) -> cb(c(arw(Nada)).toCyclerApi()));
+        case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(Nada)).toCyclerApi()));
         case Ended(End(null)) : null;
         case Ended(End(e))    : 
           __.log().debug('ready to report $e');
