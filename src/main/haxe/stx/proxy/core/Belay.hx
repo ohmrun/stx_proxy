@@ -45,13 +45,13 @@ abstract Belay<A,B,X,Y,R,E>(BelayDef<A,B,X,Y,R,E>) from BelayDef<A,B,X,Y,R,E> to
   @:to public function toProxy():Proxy<A,B,X,Y,R,E>{
     return Defer(this);
   }
-  @:to public function toFletcher():Fletcher<Noise,Proxy<A,B,X,Y,R,E>,Noise>{
+  @:to public function toFletcher():Fletcher<Nada,Proxy<A,B,X,Y,R,E>,Nada>{
     return this;
   }
   @:from static public function fromProvide<A,B,X,Y,R,E>(self:Provide<Proxy<A,B,X,Y,R,E>>){
     return lift(self);
   }
-  @:from static public function fromFletcher<A,B,X,Y,R,E>(self:Fletcher<Noise,Proxy<A,B,X,Y,R,E>,Noise>){
+  @:from static public function fromFletcher<A,B,X,Y,R,E>(self:Fletcher<Nada,Proxy<A,B,X,Y,R,E>,Nada>){
     return lift(self);
   }
 }

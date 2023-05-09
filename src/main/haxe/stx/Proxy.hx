@@ -1,6 +1,6 @@
 package stx;
 
-import tink.core.Noise;
+using stx.Pico;
 using stx.Nano;
 //Drain
 /**
@@ -27,7 +27,7 @@ typedef ConsumerDef<B,R,E>                = stx.proxy.core.Consumer.ConsumerDef<
 typedef Consumer<B,R,E>                   = stx.proxy.core.Consumer<B,R,E>;
 
 typedef DispatchDef<B,E>                  = Dispatch<B,E>;
-typedef Dispatch<B,E>                     = ProxySum<Noise,B,Closed,Noise,Noise,E>;
+typedef Dispatch<B,E>                     = ProxySum<Nada,B,Closed,Nada,Nada,E>;
 
 typedef Agenda<E>                         = stx.proxy.core.Agenda<E>;
 typedef OutletDef<R,E>                    = stx.proxy.core.Outlet.OutletDef<R,E>;

@@ -1,6 +1,6 @@
 package stx.proxy.core;
 
-typedef OutletDef<R,E>     = ProxySum<Closed,Noise,Noise,Closed,R,E>;
+typedef OutletDef<R,E>     = ProxySum<Closed,Nada,Nada,Closed,R,E>;
 
 @:using(stx.proxy.core.Outlet.OutletLift)
 abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
@@ -35,8 +35,8 @@ class OutletLift{
     function f(me:OutletDef<R,E>){
       __.log().debug('outlet: $self');
       return switch(me){
-        case Await(_,await) : f(await(Noise));
-        case Yield(_,yield) : f(yield(Noise));
+        case Await(_,await) : f(await(Nada));
+        case Yield(_,yield) : f(yield(Nada));
         case Defer(belay)   : 
           __.log().trace(_ -> _.thunk(() -> 'outlet belay $belay'));
           __.belay(

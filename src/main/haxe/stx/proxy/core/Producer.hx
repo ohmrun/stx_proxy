@@ -1,6 +1,6 @@
 package stx.proxy.core;
 
-typedef ProducerDef<Y,R,E> = ProxySum<Closed,Noise,Noise,Y,R,E>;
+typedef ProducerDef<Y,R,E> = ProxySum<Closed,Nada,Nada,Y,R,E>;
 
 @:using(stx.proxy.core.Producer.ProducerLift)
 @:forward abstract Producer<Y,R,E>(ProducerDef<Y,R,E>) from ProducerDef<Y,R,E> to ProducerDef<Y,R,E> {

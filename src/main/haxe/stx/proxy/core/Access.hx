@@ -1,6 +1,6 @@
 package stx.proxy.core;
 
-typedef AccessDef<Y,E> = ProducerDef<Y,Noise,E>;
+typedef AccessDef<Y,E> = ProducerDef<Y,Nada,E>;
 
 abstract Access<Y,E>(AccessDef<Y,E>) from AccessDef<Y,E> to AccessDef<Y,E>{
   public function new(self) this = self;

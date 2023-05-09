@@ -1,6 +1,6 @@
 package stx.proxy.core;
 
-typedef ActuatorDef<Y,E> = ProxySum<Noise,Closed,Closed,Y,Noise,E>;
+typedef ActuatorDef<Y,E> = ProxySum<Nada,Closed,Closed,Y,Nada,E>;
 
 @:using(stx.proxy.core.Actuator.ActuatorLift)
 abstract Actuator<Y,E>(ActuatorDef<Y,E>) from ActuatorDef<Y,E> to ActuatorDef<Y,E>{
@@ -12,7 +12,7 @@ abstract Actuator<Y,E>(ActuatorDef<Y,E>) from ActuatorDef<Y,E> to ActuatorDef<Y,
       Belay.fromThunk(() -> {
         var iter = iterable.iterator();
         function rec(){
-          return iter.hasNext() ? __.yield(iter.next(),(_) -> rec()) : __.ended(Val(Noise));
+          return iter.hasNext() ? __.yield(iter.next(),(_) -> rec()) : __.ended(Val(Nada));
         }
         return rec();
       }
