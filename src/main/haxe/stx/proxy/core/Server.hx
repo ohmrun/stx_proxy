@@ -2,6 +2,7 @@ package stx.proxy.core;
 
 typedef ServerDef<X,Y,R,E> = ProxySum<Closed,Noise,X,Y,R,E>;
 
+@:using(stx.proxy.core.Proxy.ProxyLift)
 @:using(stx.proxy.core.Server.ServerLift)
 @:forward
 @:transitive abstract Server<X,Y,R,E>(ServerDef<X,Y,R,E>) from ServerDef<X,Y,R,E> to ServerDef<X,Y,R,E>{

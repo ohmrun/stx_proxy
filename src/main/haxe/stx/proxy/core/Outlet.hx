@@ -26,6 +26,9 @@ abstract Outlet<R,E>(OutletDef<R,E>) from OutletDef<R,E> to OutletDef<R,E>{
   }
 }
 class OutletLift{
+  static public function toAgenda<R,E>(self:OutletDef<R,E>,fn:R->Void):Agenda<E>{
+    return agenda(self,fn);
+  }
   static public function agenda<R,E>(self:OutletDef<R,E>,fn:R->Void):Agenda<E>{
     __.assert().exists(self);
     __.log().debug('outlet agenda: $self');

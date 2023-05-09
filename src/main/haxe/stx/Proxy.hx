@@ -12,6 +12,8 @@ typedef ProxyLift                         = stx.proxy.core.Proxy.ProxyLift;
 
 typedef ServerDef<X,Y,R,E>                = stx.proxy.core.Server.ServerDef<X,Y,R,E>;
 typedef Server<X,Y,R,E>                   = stx.proxy.core.Server<X,Y,R,E>;
+//typedef ServerLift<X,Y,R,E>               = stx.proxy.core.Server.ServerLift<X,Y,R,E>;
+
 typedef Client<A,B,R,E>                   = stx.proxy.core.Client<A,B,R,E>;
 typedef ClientDef<A,B,R,E>                = stx.proxy.core.Client.ClientDef<A,B,R,E>;
 

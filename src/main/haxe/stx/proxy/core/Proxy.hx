@@ -23,6 +23,7 @@ enum ProxySum<A,B,X,Y,R,E>{
 }
 
 @:using(stx.proxy.core.Proxy.ProxyLift)
+@:transitive
 @:forward abstract Proxy<A,B,X,Y,R,E>(ProxySum<A,B,X,Y,R,E>) from ProxySum<A,B,X,Y,R,E> to ProxySum<A,B,X,Y,R,E>{
 
   static public var _(default,never) = ProxyLift;
