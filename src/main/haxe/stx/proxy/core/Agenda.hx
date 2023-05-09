@@ -25,8 +25,8 @@ abstract Agenda<E>(AgendaDef<E>) from AgendaDef<E> to AgendaDef<E>{
   }
   @:from static public function fromReport<E>(self:Report<E>):Agenda<E>{
     return lift(self.fold(
-      ()  -> Ended(Val(Nada)),
-      (e) -> Ended(End(e))
+      (e) -> Ended(End(e)),
+      ()  -> Ended(Val(Nada))
     ));
   }
   @:from static public function fromRefuse<E>(self:Refuse<E>):Agenda<E>{
