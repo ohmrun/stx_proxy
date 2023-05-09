@@ -23,6 +23,12 @@ abstract Agenda<E>(AgendaDef<E>) from AgendaDef<E> to AgendaDef<E>{
   public function prj():AgendaDef<E>{
     return this;
   }
+  @:from static public function fromReport<E>(self:Report<E>):Agenda<E>{
+    return lift(self.fold(
+      ()  -> Ended(Val(Nada)),
+      (e) -> Ended(End(e))
+    ));
+  }
   @:from static public function fromRefuse<E>(self:Refuse<E>):Agenda<E>{
     return Ended(End(self));
   }
@@ -55,6 +61,9 @@ class AgendaLift{
     return Execute.lift(Fletcher.fromApi(new AgendaExecute(self)));
   }
 }
+/**
+ * Executes the Agenda by means of a Fletcher.
+ */
 class AgendaExecute<E> extends FletcherCls<Nada,Report<E>,Nada>{
   public var action : Agenda<E>;
   public function new(action){
