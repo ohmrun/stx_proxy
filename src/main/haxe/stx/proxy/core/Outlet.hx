@@ -30,7 +30,7 @@ class OutletLift{
     return agenda(self,fn);
   }
   static public function agenda<R,E>(self:OutletDef<R,E>,fn:R->Void):Agenda<E>{
-    __.assert().exists(self);
+    __.assert().that().exists(self);
     __.log().debug('outlet agenda: $self');
     function f(me:OutletDef<R,E>){
       __.log().debug('outlet: $self');
