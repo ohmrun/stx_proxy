@@ -37,7 +37,7 @@ abstract Agenda<E>(AgendaDef<E>) from AgendaDef<E> to AgendaDef<E>{
       return switch(self){
         case Wait(fn)                     : Await(Closed.ZERO, (_:Nada) -> handler(fn(Nada)) );
         case Emit(head,tail)              : Await(Nada, (_:Nada) -> handler(tail));
-        case Hold(slot)                   : __.belay(slot.map(handler));
+        case Hold(slot)                   : __.belay(Provide.fromFuture(slot.map(handler)));
         case Halt(Production(_))          : Ended(Val(Nada));
         case Halt(Terminated(Stop))       : Ended(Tap);
         case Halt(Terminated(Exit(e)))    : Ended(End(e));

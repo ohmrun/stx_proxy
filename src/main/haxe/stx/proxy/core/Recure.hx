@@ -18,7 +18,7 @@ typedef RecureDef<B,Y,R,E>   = ProxySum<Nada,B,Nada,Y,R,E>;
       return switch(self){
         case Emit(o,next) : __.yield(o,(_) -> rec(next));
         case Wait(tran)   : __.await(Nada,(b:I) -> rec(tran(b)));
-        case Hold(held)   : __.belay(held.map(rec)); 
+        case Hold(held)   : __.belay(Provide.fromFuture(held.map(rec))); 
         case Halt(r)      : switch(r){
           case Terminated(Stop)               : __.ended(Tap);
           case Terminated(Exit(rejection))    : __.ended(End(rejection));

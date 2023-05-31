@@ -11,6 +11,7 @@ using stx.Fn;
 using stx.Stream;
 using stx.Assert;
 using eu.ohmrun.Fletcher;
+using eu.ohmrun.fletcher.Core;
 using stx.Log;
 using stx.proxy.Logging;
 

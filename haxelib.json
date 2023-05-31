@@ -11,7 +11,7 @@
         "0b1kn00b"
     ],
     "releasenote": "see CHANGELOG.md",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "url": "https://github.com/0b1kn00b/",
     "dependencies": {
         "tink_core"     : "",
