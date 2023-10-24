@@ -116,17 +116,17 @@ private class AgendaCyclerCls<E> implements stx.stream.Cycle.CyclerApi{
       default       : CYCLE_NEXT;
     }
   }
-  @:isVar public var value(get,null)          : Null<Future<Cycle>>;
-  public function get_value()  : Null<Future<Cycle>>{
-    __.log().trace('$uuid: ${this.value} ${this.pos}');
-    if(this.value == null && !this.working){
+  @:isVar public var after(get,null)          : Null<Future<Cycle>>;
+  public function get_after()  : Null<Future<Cycle>>{
+    __.log().trace('$uuid: ${this.after} ${this.pos}');
+    if(this.after == null && !this.working){
       this.working = true;
       __.log().debug('$action');
       final c = (x) -> {
         __.log().trace('constructor');
         return new AgendaCyclerCls(Agenda.lift(x),report).toCyclerApi();
       }
-      this.value = (switch(action){
+      this.after = (switch(action){
         case Await(_, arw)    : Future.irreversible((cb) -> cb(c(arw(Nada)).toCyclerApi()));
         case Yield(_, arw)    : Future.irreversible((cb) -> cb(c(arw(Nada)).toCyclerApi()));
         case Ended(End(null)) : null;
@@ -163,11 +163,11 @@ private class AgendaCyclerCls<E> implements stx.stream.Cycle.CyclerApi{
         );
       });
     }
-    return this.value;
+    return this.after;
   }
   public inline function toString(){
     final type  = __.definition(this).identifier();
-    final val   = get_value();
+    final val   = get_after();
     return '$type[$uuid]($state:$val:$pos)';
   } 
   public function toCyclerApi():CyclerApi{
